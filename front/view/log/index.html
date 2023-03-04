@@ -1,0 +1,114 @@
+{{define "log/index.html"}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标题</title>
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <script src="static/layui/layui.js"></script>
+</head>
+
+<body>
+    <button type="button" class="btn btn-primary" onclick="location.href='/'">首页</button>
+    <div style="padding: 30px;display: flex;">
+        <div style="width: 450px">
+            <input type="text" style="width: 400px;" name="filepath" lay-verify="title" autocomplete="off"
+                placeholder="请输入路径(失焦搜索)" class="layui-input" value="D:\1_liuxiaobo\testlog">
+
+            <div id="menu" style="width: 400px; height: 800px; overflow: scroll;"></div>
+        </div>
+        <div id="content" style="width: 900px;height: 830px;overflow: scroll;">
+            <pre class="layui-code logdata">{{.code}}</pre>
+        </div>
+    </div>
+</body>
+
+<script>
+    layui.use(['tree', 'code'], function () {
+        layui.code()
+        var tree = layui.tree, layer = layui.layer, $ = layui.jquery
+
+        var filepath1
+        var filename1
+        var page = 1
+
+        $("input[name=filepath]").blur(function () {
+            filepath = $(this).val()
+            //console.log("filepath:", filepath);
+            $.ajax({
+                async: true,
+                url: '/api/open_fold',
+                type: 'GET',
+                data: { filepath: filepath },
+                dataType: 'json',
+                timeout: 30000,
+                success: successCallback,
+                error: errorCallback,
+            })
+
+            function successCallback(res) {
+                console.log("res:", res);
+                tree.render({
+                    elem: '#menu'
+                    , data: res
+                    , showLine: false //是否开启连接线
+                    , accordion: true //开启手风琴模式
+                    , click: function (obj) {
+                        jsonObj = obj.data
+                        filepath1 = jsonObj.path
+                        filename1 = jsonObj.name
+                        readfile()
+                    }
+                });
+            }
+
+            function errorCallback(err, status) {
+                console.error("err:", err)
+            }
+        })
+
+        function readfile() {
+            console.log("filepath1:", filepath1);
+            console.log("filename1:", filename1);
+            layer.msg('正在读取文件，请稍等...', { icon: 16, shade: 0.01, time: 0 });
+            $.ajax({
+                async: true,
+                url: '/api/read_file',
+                type: 'GET',
+                data: {
+                    path: filepath1,
+                    name: filename1,
+                    page: page,
+                },
+                dataType: 'json',
+                timeout: 30000,
+                success: successCallback,
+                error: errorCallback,
+                complete: completeCallback
+            })
+
+            function successCallback(res) {
+                //console.log("res:", res);
+                $("#content .logdata").html(res);
+            }
+
+            function errorCallback(err, status) {
+                console.error("err:", err)
+            }
+
+            function completeCallback(xhr, status) {
+                layer.closeAll();
+            }
+        }
+    });
+
+
+</script>
+
+</html>
+
+{{end}}
