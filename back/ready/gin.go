@@ -2,8 +2,6 @@ package ready
 
 import (
 	"ViewLog/back/middleware"
-	"fmt"
-	"os"
 
 	"ViewLog/back/router"
 
@@ -24,20 +22,20 @@ func Gin() {
 	r.Run(":9000")
 }
 
-func writeFile() {
-	fp := "D:\\1_liuxiaobo\\testlog\\log.txt"
+// func writeFile() {
+// 	fp := "D:\\1_liuxiaobo\\testlog\\log.txt"
 
-	// 写入10w行数据
-	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		fmt.Println("open file err=", err)
-		return
-	}
-	defer f.Close()
+// 	// 写入10w行数据
+// 	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+// 	if err != nil {
+// 		fmt.Println("open file err=", err)
+// 		return
+// 	}
+// 	defer f.Close()
 
-	// 循环写入
-	for i := 1; i <= 10000; i++ {
-		s := fmt.Sprintf("%010d ## \r\n", i)
-		f.WriteString(s)
-	}
-}
+// 	// 循环写入
+// 	for i := 1; i <= 10000; i++ {
+// 		s := fmt.Sprintf("%010d ## \r\n", i)
+// 		f.WriteString(s)
+// 	}
+// }
