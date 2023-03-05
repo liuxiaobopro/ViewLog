@@ -1,7 +1,12 @@
 package global
 
-import "xorm.io/xorm"
+import (
+	"ViewLog/back/configs"
+
+	"xorm.io/xorm"
+)
 
 var (
-	Db *xorm.Engine
+	Db   *xorm.Engine
+	Conf *configs.Conf
 )

@@ -1,7 +1,9 @@
 package ready
 
 import (
+	"ViewLog/back/global"
 	"ViewLog/back/middleware"
+	"fmt"
 
 	"ViewLog/back/router"
 
@@ -19,7 +21,7 @@ func Gin() {
 
 	// writeFile()
 
-	r.Run(":9000")
+	r.Run(fmt.Sprintf("%s:%d", global.Conf.Host, global.Conf.Port))
 }
 
 // func writeFile() {
