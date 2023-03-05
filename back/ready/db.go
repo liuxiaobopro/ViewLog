@@ -1,18 +1,26 @@
 package ready
 
 import (
+	"fmt"
 	"time"
 
 	"ViewLog/back/global"
 	"ViewLog/back/model"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
 	"xorm.io/xorm/log"
 )
 
 func Db() {
-	engine, err := xorm.NewEngine("mysql", "root:123456@127.0.0.1:3306/viewlog?charset=utf8mb4")
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=true&loc=Local",
+		global.Conf.DB.User,
+		global.Conf.DB.Password,
+		global.Conf.DB.Host,
+		global.Conf.DB.Port,
+		global.Conf.DB.Name,
+		global.Conf.DB.Charset)
+	engine, err := xorm.NewEngine("mysql", dns)
 	if err != nil {
 		panic(err)
 	}

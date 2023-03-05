@@ -6,6 +6,6 @@ import (
 
 func main() {
 	ready.Config()
-	// ready.Db()
+	ready.Db()
 	ready.Gin()
 }
