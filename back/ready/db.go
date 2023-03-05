@@ -12,7 +12,7 @@ import (
 )
 
 func Db() {
-	engine, err := xorm.NewEngine("mysql", "ViewLog:CsKXCYDAt4d75X2K@49.232.229.21:3306/viewlog?charset=utf8mb4")
+	engine, err := xorm.NewEngine("mysql", "root:123456@127.0.0.1:3306/viewlog?charset=utf8mb4")
 	if err != nil {
 		panic(err)
 	}
