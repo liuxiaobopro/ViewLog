@@ -1,0 +1,28 @@
+{{template "base.html" .}}
+
+{{define "css"}}
+<style>
+    .func .item {
+        margin: 10px;
+    }
+</style>
+{{end}}
+
+{{define "body"}}
+<body>
+    <div class="d-flex flex-column align-items-center func">
+        <div class="item">
+            {{.time}}
+        </div>
+        <div class="item">
+            <button type="button" class="layui-btn layui-btn-lg">单主机</button>
+        </div>
+        <div class="item">
+            <button type="button" class="layui-btn layui-btn-lg">多主机</button>
+        </div>
+    </div>
+</body>
+{{end}}
+
+{{define "js"}}
+{{end}}

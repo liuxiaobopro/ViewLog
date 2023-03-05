@@ -11,7 +11,7 @@ import (
 func ViewIndexIndex(c *gin.Context) {
 	resData := make(gin.H, 0)
 	resData["time"] = time.Now().Format("2006-01-02 15:04:05")
-	c.HTML(http.StatusOK, "index.html", resData)
+	c.HTML(http.StatusOK, "welcome.html", resData)
 }
 
 func ViewLogIndex(c *gin.Context) {
@@ -27,5 +27,5 @@ func ViewLogIndex(c *gin.Context) {
 
 	resData["code"] = lines
 
-	c.HTML(http.StatusOK, "log/index.html", resData)
+	c.HTML(http.StatusOK, "log.html", resData)
 }

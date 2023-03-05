@@ -1,0 +1,39 @@
+{{template "base.html" .}}
+
+{{define "css"}}
+<style>
+    .main{
+        display: flex;
+    }
+    .main .ssh{
+        width: 300px;
+    }
+</style>
+{{end}}
+
+{{define "body"}}
+
+<body>
+    <div class="main">
+        <div class="ssh">
+            <form class="layui-form" action="">
+                <div class="layui-form-item ssh-item">
+                    <input type="checkbox" name="like[write]" title="测试服1[192.168.0.1:22]">
+                    <input type="checkbox" name="like[read]" title="测试服2[192.168.0.1:22]" checked="">
+                    <input type="checkbox" name="like[game]" title="测试服3[192.168.0.1:22]">
+                </div>
+
+                <div class="layui-form-item">
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1">搜索</button>
+                </div>
+            </form>
+        </div>
+        <div class="log">
+            日志
+        </div>
+    </div>
+</body>
+{{end}}
+
+{{define "js"}}
+{{end}}

@@ -15,7 +15,7 @@ func Gin() {
 
 	r.Use(middleware.Trace())
 	r.Static("static", "front/static")
-	r.LoadHTMLGlob("front/view/**/*")
+	r.LoadHTMLGlob("front/view/*")
 
 	router.Router(r)
 
