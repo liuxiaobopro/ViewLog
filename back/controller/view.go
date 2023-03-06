@@ -8,13 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ViewIndexIndex(c *gin.Context) {
+type viewHandle struct{}
+
+var ViewHandle = new(viewHandle)
+
+func (*viewHandle) ViewIndex(c *gin.Context) {
 	resData := make(gin.H, 0)
 	resData["time"] = time.Now().Format("2006-01-02 15:04:05")
 	c.HTML(http.StatusOK, "welcome.html", resData)
 }
 
-func ViewLogIndex(c *gin.Context) {
+func (*viewHandle) ViewLog(c *gin.Context) {
 	resData := make(gin.H, 0)
 
 	//#region 读取文件
@@ -28,4 +32,9 @@ func ViewLogIndex(c *gin.Context) {
 	resData["code"] = lines
 
 	c.HTML(http.StatusOK, "log.html", resData)
+}
+
+func (*viewHandle) ViewSimple(c *gin.Context) {
+	resData := make(gin.H, 0)
+	c.HTML(http.StatusOK, "simple.html", resData)
 }

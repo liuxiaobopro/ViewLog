@@ -15,7 +15,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func OpenFold(c *gin.Context) {
+type apiHandle struct{}
+
+var ApiHandle = new(apiHandle)
+
+func (*apiHandle) OpenFold(c *gin.Context) {
 	//#region 获取参数
 	pathParam := c.Query("filepath")
 	if pathParam == "" {
@@ -73,7 +77,7 @@ func OpenFold(c *gin.Context) {
 	c.JSON(http.StatusOK, menuList)
 }
 
-func ShowFolds(c *gin.Context) {
+func (*apiHandle) ShowFolds(c *gin.Context) {
 	var (
 		menuList      = make([]*modelRes.LogIndexShowFoldsRes, 0)
 		menuChildList = make([]*modelRes.LogIndexShowFoldsRes, 0)
@@ -150,7 +154,7 @@ func ShowFolds(c *gin.Context) {
 	c.JSON(http.StatusOK, menuList)
 }
 
-func ReadFile(c *gin.Context) {
+func (*apiHandle) ReadFile(c *gin.Context) {
 	//#region 获取参数
 	var r modelReq.LogIndexReadFileReq
 	if err := c.ShouldBind(&r); err != nil {
