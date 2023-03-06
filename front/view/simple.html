@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="static/css/main.css">
 
     <script src="static/layui/layui.js"></script>
+    <script src="static/js/simple.js"></script>
 </head>
 
 <body>
@@ -19,56 +20,81 @@
     </div>
     <div class="main" style="display: flex;">
         <div class="search" style="width: 35%;margin-right: 5px;">
-            <div class="mode" style="margin-bottom: 5px;">
-                <form class="layui-form layui-form-pane" action="">
-                    <div class="layui-form-item" pane="">
-                        <label class="layui-form-label">运行模式</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="sex" value="1" title="查看模式" checked="">
-                            <input type="radio" name="sex" value="2" title="搜索模式">
+            <fieldset class="layui-elem-field">
+                <legend>功能</legend>
+                <div class="layui-field-box">
+                    <div class="mode" style="margin-bottom: 5px;">
+                        <form class="layui-form layui-form-pane" action="">
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label">运行模式</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="mode" lay-filter="mode" value="1" title="查看模式" checked="">
+                                    <input type="radio" name="mode" lay-filter="mode" value="2" title="搜索模式">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="do_search" style="display: none;">
+                        <form class="layui-form layui-form-pane" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">关键字</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="username" lay-verify="required" autocomplete="off"
+                                        class="layui-input" placeholder="请输入要查询的关键字">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <button type="button" class="layui-btn" style="width: 100%;">搜索</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field">
+                <legend>主机</legend>
+                <div class="layui-field-box">
+                    <div style="display: flex;">
+                        <div>
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">
+                                <i class="layui-icon layui-icon-add-circle"></i>
+                                添加SSH
+                            </button>
+                            <form class="layui-form" action="">
+                                <div class="layui-form-item ssh-item">
+                                    <input type="radio" name="sex" value="男" title="测试服1[192.168.0.1:22]" checked="">
+                                    <input type="radio" name="sex" value="女" title="测试服1[192.168.0.1:22]">
+                                    <input type="radio" name="sex" value="禁" title="测试服1[192.168.0.1:22]">
+                                </div>
+                            </form>
+                        </div>
+                        <div>
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">
+                                <i class="layui-icon layui-icon-add-circle"></i>
+                                添加目录
+                            </button>
+                            <form class="layui-form" action="">
+                                <div class="layui-form-item ssh-item">
+                                    <input type="checkbox" name="like[write]" lay-skin="primary"
+                                        title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
+                                    <input type="checkbox" name="like[read]" lay-skin="primary"
+                                        title="D:\1_liuxiaobo\download_ali\navicat Premium 120" checked="">
+                                    <input type="checkbox" name="like[game]" lay-skin="primary"
+                                        title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="keyword">
-                <div class="layui-form-item">
-                    <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入要查询的关键字"
-                        class="layui-input">
                 </div>
-            </div>
-            <div style="display: flex;">
-                <div>
-                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">+ 添加SSH</button>
-                    <form class="layui-form" action="">
-                        <div class="layui-form-item ssh-item">
-                            <input type="radio" name="sex" value="男" title="测试服1[192.168.0.1:22]" checked="">
-                            <input type="radio" name="sex" value="女" title="测试服1[192.168.0.1:22]">
-                            <input type="radio" name="sex" value="禁" title="测试服1[192.168.0.1:22]">
-                        </div>
-                    </form>
-                </div>
-                <div>
-                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">+ 添加目录</button>
-                    <form class="layui-form" action="">
-                        <div class="layui-form-item ssh-item">
-                            <input type="checkbox" name="like[write]" lay-skin="primary"
-                                title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
-                            <input type="checkbox" name="like[read]" lay-skin="primary"
-                                title="D:\1_liuxiaobo\download_ali\navicat Premium 120" checked="">
-                            <input type="checkbox" name="like[game]" lay-skin="primary"
-                                title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="do_search">
-                <div class="layui-form-item">
-                    <button type="button" class="layui-btn" style="width: 100%;">搜索</button>
-                </div>
-            </div>
+            </fieldset>
         </div>
-        <div class="view">
-            日志
+        <div class="view" style="flex: 1;">
+            <fieldset class="layui-elem-field">
+                <legend>文件内容</legend>
+                <div class="layui-field-box">
+                    文件内容11111111111111111111111111111111111
+                </div>
+            </fieldset>
         </div>
     </div>
 </body>
