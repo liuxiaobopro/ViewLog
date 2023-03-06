@@ -1,0 +1,57 @@
+{{define "add_ssh.html"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加ssh</title>
+
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <link rel="stylesheet" href="static/css/main.css">
+
+    <script src="static/layui/layui.js"></script>
+</head>
+
+<body>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span style="color: red;">*</span>主机名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" autocomplete="off" placeholder="请输入主机名称(唯一标识)" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span style="color: red;">*</span>主机地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="host" autocomplete="off" placeholder="请输入主机地址" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span style="color: red;">*</span>端口号</label>
+            <div class="layui-input-block">
+                <input type="text" name="port" autocomplete="off" placeholder="请输入端口号" class="layui-input" value="22">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入账号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="title" autocomplete="off" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button type="button" class="layui-btn" style="width: 100%;">添加</button>
+        </div>
+    </form>
+</body>
+
+</html>
+{{end}}

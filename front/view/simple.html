@@ -6,12 +6,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>单主机</title>
+    <title>添加ssh</title>
     <link rel="stylesheet" href="static/layui/css/layui.css">
     <link rel="stylesheet" href="static/css/main.css">
 
     <script src="static/layui/layui.js"></script>
     <script src="static/js/simple.js"></script>
+
+    <style>
+        .layui-elem-field {
+            margin-bottom: 10px;
+            padding: 0;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #e2e2e2;
+        }
+        .main legend{
+            font-weight: bold;
+            color: #56a66c;
+        }
+    </style>
 </head>
 
 <body>
@@ -56,7 +70,7 @@
                 <div class="layui-field-box">
                     <div style="display: flex;">
                         <div>
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_ssh" style="width: 80%;">
                                 <i class="layui-icon layui-icon-add-circle"></i>
                                 添加SSH
                             </button>
@@ -69,9 +83,9 @@
                             </form>
                         </div>
                         <div>
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_folder" style="width: 80%;">
                                 <i class="layui-icon layui-icon-add-circle"></i>
-                                添加目录
+                                添加文件夹
                             </button>
                             <form class="layui-form" action="">
                                 <div class="layui-form-item ssh-item">

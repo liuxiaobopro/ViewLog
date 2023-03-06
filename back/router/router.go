@@ -10,9 +10,11 @@ func Router(r *gin.Engine) {
 	//#region 页面
 	rg1 := r.Group("")
 	{
-		rg1.GET("/", controller.ViewHandle.ViewIndex)
-		rg1.GET("/log", controller.ViewHandle.ViewLog)
-		rg1.GET("/simple", controller.ViewHandle.ViewSimple)
+		rg1.GET("/", controller.ViewHandle.ViewIndex)               // 首页
+		rg1.GET("/log", controller.ViewHandle.ViewLog)              // 查看日志
+		rg1.GET("/simple", controller.ViewHandle.ViewSimple)        // 单主机
+		rg1.GET("/ssh_add", controller.ViewHandle.ViewSshAdd)       // 添加ssh
+		rg1.GET("/folder_add", controller.ViewHandle.ViewFolderAdd) // 添加文件夹
 	}
 	//#endregion
 
