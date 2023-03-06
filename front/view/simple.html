@@ -19,9 +19,9 @@
     </div>
     <div class="main" style="display: flex;">
         <div class="search" style="width: 35%;margin-right: 5px;">
-            <div class="mode">
-                <form class="layui-form" action="">
-                    <div class="layui-form-item">
+            <div class="mode" style="margin-bottom: 5px;">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item" pane="">
                         <label class="layui-form-label">运行模式</label>
                         <div class="layui-input-block">
                             <input type="radio" name="sex" value="1" title="查看模式" checked="">
@@ -38,6 +38,7 @@
             </div>
             <div style="display: flex;">
                 <div>
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">+ 添加SSH</button>
                     <form class="layui-form" action="">
                         <div class="layui-form-item ssh-item">
                             <input type="radio" name="sex" value="男" title="测试服1[192.168.0.1:22]" checked="">
@@ -47,6 +48,7 @@
                     </form>
                 </div>
                 <div>
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="width: 80%;">+ 添加目录</button>
                     <form class="layui-form" action="">
                         <div class="layui-form-item ssh-item">
                             <input type="checkbox" name="like[write]" lay-skin="primary"
