@@ -1,10 +1,10 @@
 package ready
 
 import (
-	"ViewLog/back/global"
-	"ViewLog/back/middleware"
 	"fmt"
 
+	"ViewLog/back/global"
+	"ViewLog/back/middleware"
 	"ViewLog/back/router"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +14,8 @@ func Gin() {
 	r := gin.Default()
 
 	r.Use(middleware.Trace())
+	r.Use(middleware.Recovery())
+
 	r.Static("static", "front/static")
 	r.LoadHTMLGlob("front/view/*")
 
@@ -21,7 +23,9 @@ func Gin() {
 
 	// writeFile()
 
-	r.Run(fmt.Sprintf("%s:%d", global.Conf.Host, global.Conf.Port))
+	if err := r.Run(fmt.Sprintf("%s:%d", global.Conf.Host, global.Conf.Port)); err != nil {
+		panic(err)
+	}
 }
 
 // func writeFile() {

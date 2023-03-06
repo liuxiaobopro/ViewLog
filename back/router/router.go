@@ -24,6 +24,7 @@ func Router(r *gin.Engine) {
 		rg2.GET("/show_fold", controller.ApiHandle.ShowFolds)
 		rg2.GET("/open_fold", controller.ApiHandle.OpenFold)
 		rg2.GET("/read_file", controller.ApiHandle.ReadFile)
+		rg2.POST("/add_ssh", controller.ApiHandle.AddSsh)
 	}
 	//#endregion
 }

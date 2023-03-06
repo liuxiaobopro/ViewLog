@@ -10,6 +10,7 @@ import (
 	"ViewLog/back/common/tools"
 	modelReq "ViewLog/back/model/req"
 	modelRes "ViewLog/back/model/res"
+	"ViewLog/back/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -19,6 +20,7 @@ type apiHandle struct{}
 
 var ApiHandle = new(apiHandle)
 
+// OpenFold 打开文件夹
 func (*apiHandle) OpenFold(c *gin.Context) {
 	//#region 获取参数
 	pathParam := c.Query("filepath")
@@ -77,10 +79,11 @@ func (*apiHandle) OpenFold(c *gin.Context) {
 	c.JSON(http.StatusOK, menuList)
 }
 
+// ShowFolds 展示文件夹
 func (*apiHandle) ShowFolds(c *gin.Context) {
 	var (
 		menuList      = make([]*modelRes.LogIndexShowFoldsRes, 0)
-		menuChildList = make([]*modelRes.LogIndexShowFoldsRes, 0)
+		menuChildList []*modelRes.LogIndexShowFoldsRes
 	)
 
 	//#region 获取参数
@@ -154,6 +157,7 @@ func (*apiHandle) ShowFolds(c *gin.Context) {
 	c.JSON(http.StatusOK, menuList)
 }
 
+// ReadFile 读取文件
 func (*apiHandle) ReadFile(c *gin.Context) {
 	//#region 获取参数
 	var r modelReq.LogIndexReadFileReq
@@ -192,4 +196,16 @@ func (*apiHandle) ReadFile(c *gin.Context) {
 	//#endregion
 
 	c.JSON(http.StatusOK, lines)
+}
+
+// AddSsh 添加ssh
+func (*apiHandle) AddSsh(c *gin.Context) {
+	req := new(modelReq.AddSshReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	data := service.ApiService.AddSsh(req)
+	c.JSON(http.StatusOK, data)
 }
