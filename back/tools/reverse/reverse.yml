@@ -1,0 +1,34 @@
+kind: reverse
+name: mydb
+source:
+  database: mysql
+  conn_str: 'root:123456@tcp(127.0.0.1:3306)/viewlog?charset=utf8mb4&parseTime=true&loc=Local'
+targets:
+- type: codes
+  include_tables: # 包含的表，以下可以用 **
+  exclude_tables: # 排除的表，以下可以用 **
+  table_prefix: "" # 表前缀
+  multiple_files: true # 是否生成多个文件
+  language: golang
+  output_dir: ./models
+  template: | # template for code file, it has higher perior than template_path
+    package models
+
+    {{$ilen := len .Imports}}
+    {{if gt $ilen 0}}
+    import (
+      {{range .Imports}}"{{.}}"{{end}}
+    )
+    {{end}}
+
+    {{range .Tables}}
+    type {{TableMapper .Name}} struct {
+    {{$table := .}}
+    {{range .ColumnsSeq}}{{$col := $table.GetColumn .}}	{{ColumnMapper $col.Name}}	{{Type $col}} `{{Tag $table $col}}`
+    {{end}}
+    }
+
+    func (m *{{TableMapper .Name}}) TableComment() string {
+    	return "{{$table.Name}}"
+    }
+    {{end}}

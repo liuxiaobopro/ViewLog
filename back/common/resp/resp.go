@@ -7,28 +7,40 @@ type Resp struct {
 }
 
 const (
-	Fail int = iota - 1
-	Succ
+	FailCode int = iota - 1
+	SuccCode
+	InterCode
+	ParamCode
 )
 
 var codeMap = map[int]string{
-	Fail: "fail",
+	FailCode:  "fail",
+	SuccCode:  "success",
+	InterCode: "internal error",
+	ParamCode: "param error",
 }
 
 func GetMsg(code int) string {
 	return codeMap[code]
 }
 
+var (
+	Fail  = &Resp{Code: FailCode, Msg: GetMsg(FailCode), Data: nil}
+	Succ  = &Resp{Code: SuccCode, Msg: GetMsg(SuccCode), Data: nil}
+	Inter = &Resp{Code: InterCode, Msg: GetMsg(InterCode), Data: nil}
+	Param = &Resp{Code: ParamCode, Msg: GetMsg(ParamCode), Data: nil}
+)
+
 func SuccResp(data any) *Resp {
 	return &Resp{
-		Code: Succ,
+		Code: SuccCode,
 		Msg:  "success",
 		Data: data,
 	}
 }
 
 func FailResp(args ...any) *Resp {
-	code := Fail
+	code := FailCode
 	msg := GetMsg(code)
 	if len(args) > 0 {
 		code = args[0].(int)

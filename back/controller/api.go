@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strconv"
 
+	"ViewLog/back/common/resp"
 	"ViewLog/back/common/tools"
 	modelReq "ViewLog/back/model/req"
 	modelRes "ViewLog/back/model/res"
@@ -202,7 +203,7 @@ func (*apiHandle) ReadFile(c *gin.Context) {
 func (*apiHandle) AddSsh(c *gin.Context) {
 	req := new(modelReq.AddSshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, resp.Param)
 		return
 	}
 

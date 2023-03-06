@@ -1,9 +1,3 @@
 post: 9000
 
-db:
-    host: 127.0.0.1
-    port: 3306
-    user: root
-    password: 123456
-    name: viewlog
-    charset: utf8mb4
+mysql: "root:123456@tcp(127.0.0.1:3306)/viewlog?charset=utf8mb4&parseTime=true&loc=Local"

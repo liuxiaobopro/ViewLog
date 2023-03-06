@@ -15,7 +15,7 @@ func Recovery() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				logrus.Infof("middleware recover err: %v", err)
-				c.JSON(http.StatusInternalServerError, resp.FailResp(resp.Fail, "服务器错误"))
+				c.JSON(http.StatusInternalServerError, resp.FailResp(resp.FailCode, "服务器错误"))
 				return
 			}
 		}()
