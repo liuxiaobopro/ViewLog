@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"ViewLog/back/common/resp"
 	"ViewLog/back/global"
 	"ViewLog/back/model"
 	modelReq "ViewLog/back/model/req"
@@ -186,7 +187,7 @@ func (*apiService) DetailSsh(req *modelReq.DetailSshReq) (*model.Ssh, error) {
 }
 
 // ListSsh 列表ssh
-func (*apiService) ListSsh(req *modelReq.ListSshReq) ([]*model.Ssh, error) {
+func (*apiService) ListSsh(req *modelReq.ListSshReq) (*resp.ListResult, error) {
 	sess := global.Db
 
 	var sshList = make([]*model.Ssh, 0)
@@ -194,6 +195,10 @@ func (*apiService) ListSsh(req *modelReq.ListSshReq) ([]*model.Ssh, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("total: ", total, "sshList: ", sshList)
-	return sshList, nil
+
+	listResult := &resp.ListResult{
+		Total: total,
+		List:  sshList,
+	}
+	return listResult, nil
 }

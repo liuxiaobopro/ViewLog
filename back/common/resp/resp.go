@@ -6,6 +6,11 @@ type Resp struct {
 	Data any    `json:"data"`
 }
 
+type ListResult struct {
+	Total int64 `json:"total"`
+	List  any   `json:"list"`
+}
+
 const (
 	FailCode int = iota - 1
 	SuccCode
