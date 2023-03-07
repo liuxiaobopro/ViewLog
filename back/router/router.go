@@ -33,7 +33,11 @@ func Router(r *gin.Engine) {
 		rg2.GET("/show_fold", controller.ApiHandle.ShowFolds)
 		rg2.GET("/open_fold", controller.ApiHandle.OpenFold)
 		rg2.GET("/read_file", controller.ApiHandle.ReadFile)
-		rg2.POST("/add_ssh", controller.ApiHandle.AddSsh)
+		rg2.POST("/ssh", controller.ApiHandle.AddSsh)
+		rg2.DELETE("/ssh", controller.ApiHandle.DelSsh)
+		rg2.PUT("/ssh", controller.ApiHandle.UpdateSsh)
+		rg2.GET("/ssh/:id", controller.ApiHandle.DetailSsh)
+		rg2.GET("/ssh", controller.ApiHandle.ListSsh)
 	}
 	//#endregion
 }

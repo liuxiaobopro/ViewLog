@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"ViewLog/back/global"
+	"ViewLog/back/model"
 	modelReq "ViewLog/back/model/req"
 
 	"xorm.io/xorm"
@@ -15,6 +16,7 @@ import (
 var (
 	dbYamlPath = "back/configs/db.yaml"
 	lockPath   = "install.lock"
+	sess       = global.Db
 )
 
 type apiService struct {
@@ -81,10 +83,105 @@ func (th *apiService) Reset() error {
 }
 
 // AddSsh 添加ssh
-func (*apiService) AddSsh(req *modelReq.AddSshReq) (any, error) {
+func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
+	//#region 校验
+	if total, err := sess.Where("name = ?", req.Name).Count(&model.Ssh{}); err != nil {
+		return err
+	} else if total > 0 {
+		return errors.New("ssh名称已存在")
+	}
+	//#endregion
+
+	//#region 添加
+	if _, err := sess.Insert(&model.Ssh{
+		Name:     req.Name,
+		Host:     req.Host,
+		Port:     req.Port,
+		Username: req.Username,
+		Password: req.Password,
+	}); err != nil {
+		return err
+	}
+	//#endregion
+	return nil
+}
+
+// DelSsh 删除ssh
+func (*apiService) DelSsh(req *modelReq.DelSshReq) error {
+	if _, err := sess.ID(req.Id).Delete(&model.Ssh{}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateSsh 更新ssh
+func (*apiService) UpdateSsh(req *modelReq.UpdateSshReq) error {
+	//#region 校验
+	var sshInfo *model.Ssh
+	if has, err := sess.ID(req.Id).Get(sshInfo); err != nil {
+		return err
+	} else if !has {
+		return errors.New("ssh不存在")
+	}
+
+	if total, err := sess.Where("name = ?", req.Name).Count(&model.Ssh{}); err != nil {
+		return err
+	} else if total > 0 {
+		return errors.New("ssh名称已存在")
+	}
+	//#endregion
+
+	//#region 构建更新信息
 	var (
-		sess = global.Db
+		updateSSh  *model.Ssh
+		updateCols []string
 	)
-	sess.Where("name = ?", req.Name).Count()
-	return nil, nil
+	if req.Name != "" && req.Name != sshInfo.Name {
+		updateSSh.Name = req.Name
+		updateCols = append(updateCols, "name")
+	}
+	if req.Host != "" && req.Host != sshInfo.Host {
+		updateSSh.Host = req.Host
+		updateCols = append(updateCols, "host")
+	}
+	if req.Port != 0 && req.Port != sshInfo.Port {
+		updateSSh.Port = req.Port
+		updateCols = append(updateCols, "port")
+	}
+	if req.Username != "" && req.Username != sshInfo.Username {
+		updateSSh.Username = req.Username
+		updateCols = append(updateCols, "username")
+	}
+	if req.Password != "" && req.Password != sshInfo.Password {
+		updateSSh.Password = req.Password
+		updateCols = append(updateCols, "password")
+	}
+	//#endregion
+
+	//#region 更新
+	if _, err := sess.ID(req.Id).Cols(updateCols...).Update(updateSSh); err != nil {
+		return err
+	}
+	//#endregion
+	return nil
+}
+
+// DetailSSh 详情ssh
+func (*apiService) DetailSsh(req *modelReq.DetailSshReq) (*model.Ssh, error) {
+	var sshInfo *model.Ssh
+	if has, err := sess.ID(req.Id).Get(sshInfo); err != nil {
+		return nil, err
+	} else if !has {
+		return nil, errors.New("ssh不存在")
+	}
+	return sshInfo, nil
+}
+
+// ListSsh 列表ssh
+func (*apiService) ListSsh(req *modelReq.ListSshReq) (any, error) {
+	var sshList = make([]*model.Ssh, 0)
+	if err := sess.Limit((req.Page-1)*req.Limit, req.Limit).Find(sshList); err != nil {
+		return nil, err
+	}
+	return sshList, nil
 }

@@ -19,6 +19,24 @@ type AddSshReq struct {
 	Name     string `form:"name" json:"name" binding:"required"`
 	Host     string `form:"host" json:"host" binding:"required"`
 	Port     int    `form:"port" json:"port" binding:"required"`
-	User     string `form:"user" json:"user"`
+	Username string `form:"user" json:"username"`
 	Password string `form:"password" json:"password"`
+}
+
+type DelSshReq struct {
+	Id int `form:"id" json:"id" binding:"required"`
+}
+
+type UpdateSshReq struct {
+	Id int `form:"id" json:"id" binding:"required"`
+	AddSshReq
+}
+
+type DetailSshReq struct {
+	Id int `form:"id" json:"id" binding:"required"`
+}
+
+type ListSshReq struct {
+	Page  int `form:"page" json:"page" binding:"required"`
+	Limit int `form:"limit" json:"limit" binding:"required"`
 }

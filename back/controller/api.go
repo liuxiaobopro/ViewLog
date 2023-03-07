@@ -234,7 +234,75 @@ func (*apiHandle) AddSsh(c *gin.Context) {
 		return
 	}
 
-	data, err := service.ApiService.AddSsh(req)
+	err := service.ApiService.AddSsh(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.Succ)
+}
+
+// DelSsh 删除ssh
+func (*apiHandle) DelSsh(c *gin.Context) {
+	req := new(modelReq.DelSshReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		logrus.Errorf("DelSsh req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	err := service.ApiService.DelSsh(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.Succ)
+}
+
+// UpdateSsh 更新ssh
+func (*apiHandle) UpdateSsh(c *gin.Context) {
+	req := new(modelReq.UpdateSshReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		logrus.Errorf("UpdateSsh req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	err := service.ApiService.UpdateSsh(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.Succ)
+}
+
+// DetailSSh 获取ssh详情
+func (*apiHandle) DetailSsh(c *gin.Context) {
+	req := new(modelReq.DetailSshReq)
+	if err := c.ShouldBind(req); err != nil {
+		logrus.Errorf("DetailSSh req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	data, err := service.ApiService.DetailSsh(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(data))
+}
+
+// ListSsh 获取ssh列表
+func (*apiHandle) ListSsh(c *gin.Context) {
+	req := new(modelReq.ListSshReq)
+	if err := c.ShouldBind(req); err != nil {
+		logrus.Errorf("ListSsh req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	data, err := service.ApiService.ListSsh(req)
 	if err != nil {
 		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
 		return
