@@ -41,6 +41,8 @@ func (th *apiService) Install(req *modelReq.InstallReq) (any, error) {
 		return nil, errors.New("数据库连接失败, 请检查配置是否正确")
 	}
 
+	global.Db = engine
+
 	//#region 写入文件
 	dbYaml := fmt.Sprintf("mysql: %s", mysqlDns)
 	if err := os.WriteFile(dbYamlPath, []byte(dbYaml), 0666); err != nil {

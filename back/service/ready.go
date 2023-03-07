@@ -21,6 +21,11 @@ func Db() {
 		logrus.Warningln("mysql连接字符串为空")
 		return
 	}
+	if global.Db != nil {
+		if err := global.Db.Ping(); err == nil {
+			return
+		}
+	}
 	engine, err := xorm.NewEngine("mysql", global.Conf.Mysql)
 	if err != nil {
 		panic(err)
