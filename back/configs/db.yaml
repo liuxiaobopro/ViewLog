@@ -1,3 +1,1 @@
-post: 9000
-
 mysql: "root:123456@tcp(127.0.0.1:3306)/viewlog?charset=utf8mb4&parseTime=true&loc=Local"

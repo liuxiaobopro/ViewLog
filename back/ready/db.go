@@ -7,12 +7,17 @@ import (
 	"ViewLog/back/model"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sirupsen/logrus"
 	"xorm.io/core"
 	"xorm.io/xorm"
 	"xorm.io/xorm/log"
 )
 
 func Db() {
+	if global.Conf.Mysql == "" {
+		logrus.Warningln("mysql连接字符串为空")
+		return
+	}
 	engine, err := xorm.NewEngine("mysql", global.Conf.Mysql)
 	if err != nil {
 		panic(err)

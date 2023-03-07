@@ -1,8 +1,6 @@
 package ready
 
 import (
-	"flag"
-	"fmt"
 	"os"
 
 	"ViewLog/back/configs"
@@ -17,35 +15,30 @@ func Config() {
 		err  error
 		path = "back/configs/"
 		conf configs.Conf
-
-		runmode string
 	)
-
-	//#region 获取命令行执行参数
-	flag.StringVar(&runmode, "runmode", "", "please input runmode")
-	flag.Parse()
-
-	var configPath string
-	if runmode == "" {
-		configPath = path + "config.yaml"
-	} else {
-		configPath = fmt.Sprintf("%sconfig_%s.yaml", path, runmode)
-	}
-	//#endregion
-
-	//#region 读取yaml并映射到conf
-	var contentYaml []byte
-	if contentYaml, err = os.ReadFile(configPath); err != nil {
+	// #region 读取通用配置
+	var configPath string =path + "config.yaml"
+	var configYaml []byte
+	if configYaml, err = os.ReadFile(configPath); err != nil {
 		panic(err)
 	}
 
-	if err = yaml.Unmarshal(contentYaml, &conf); err != nil {
+	if err = yaml.Unmarshal(configYaml, &conf); err != nil {
 		panic(err)
 	}
-	//#endregion
+	// #endregion
 
-	conf.Host = "0.0.0.0"
-	conf.Runmode = runmode
+	// #region 读取db
+	var dbPath string =path + "db.yaml"
+	var dbYaml []byte
+	if dbYaml, err = os.ReadFile(dbPath); err != nil {
+		panic(err)
+	}
+
+	if err = yaml.Unmarshal(dbYaml, &conf); err != nil {
+		panic(err)
+	}
+	// #endregion
 
 	global.Conf = &conf
 	logrus.Infof("config: %+v", global.Conf)
