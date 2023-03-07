@@ -1,6 +1,7 @@
 package service
 
 import (
+	"crypto/md5"
 	"errors"
 	"fmt"
 	"os"
@@ -99,7 +100,7 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 		Host:     req.Host,
 		Port:     req.Port,
 		Username: req.Username,
-		Password: req.Password,
+		Password: fmt.Sprintf("%x", md5.Sum([]byte(req.Password))),
 	}); err != nil {
 		return err
 	}
@@ -138,33 +139,33 @@ func (*apiService) UpdateSsh(req *modelReq.UpdateSshReq) error {
 
 	//#region 构建更新信息
 	var (
-		updateSSh  *model.Ssh
+		updateSsh  *model.Ssh
 		updateCols []string
 	)
 	if req.Name != "" && req.Name != sshInfo.Name {
-		updateSSh.Name = req.Name
+		updateSsh.Name = req.Name
 		updateCols = append(updateCols, "name")
 	}
 	if req.Host != "" && req.Host != sshInfo.Host {
-		updateSSh.Host = req.Host
+		updateSsh.Host = req.Host
 		updateCols = append(updateCols, "host")
 	}
 	if req.Port != 0 && req.Port != sshInfo.Port {
-		updateSSh.Port = req.Port
+		updateSsh.Port = req.Port
 		updateCols = append(updateCols, "port")
 	}
 	if req.Username != "" && req.Username != sshInfo.Username {
-		updateSSh.Username = req.Username
+		updateSsh.Username = req.Username
 		updateCols = append(updateCols, "username")
 	}
-	if req.Password != "" && req.Password != sshInfo.Password {
-		updateSSh.Password = req.Password
+	if req.Password != "" && req.Password != fmt.Sprintf("%x", md5.Sum([]byte(sshInfo.Password))) {
+		updateSsh.Password = fmt.Sprintf("%x", md5.Sum([]byte(req.Password)))
 		updateCols = append(updateCols, "password")
 	}
 	//#endregion
 
 	//#region 更新
-	if _, err := sess.ID(req.Id).Cols(updateCols...).Update(updateSSh); err != nil {
+	if _, err := sess.ID(req.Id).Cols(updateCols...).Update(updateSsh); err != nil {
 		return err
 	}
 	//#endregion
