@@ -12,11 +12,16 @@ type viewHandle struct{}
 
 var ViewHandle = new(viewHandle)
 
+// Install 安装页面
+func (*viewHandle) Install(c *gin.Context) {
+	c.HTML(http.StatusOK, "install.html", gin.H{})
+}
+
 // ViewIndex 首页
 func (*viewHandle) ViewIndex(c *gin.Context) {
 	resData := make(gin.H, 0)
 	resData["time"] = time.Now().Format("2006-01-02 15:04:05")
-	resData["title"] = "欢迎使用文件查看器"
+	resData["title"] = "欢迎使用日志查看器"
 	c.HTML(http.StatusOK, "welcome.html", resData)
 }
 

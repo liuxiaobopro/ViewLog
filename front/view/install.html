@@ -1,0 +1,85 @@
+{{define "install.html"}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安装</title>
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <link rel="stylesheet" href="static/css/main.css">
+
+    <script src="static/layui/layui.js"></script>
+    <script src="static/js/install.js"></script>
+
+    <style>
+        .main {
+            width: 500px;
+            margin: 0 auto;
+            margin-top: 100px;
+        }
+
+        .main .title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="title">
+            <h1>初始化数据库</h1>
+        </div>
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="host" autocomplete="off" value="127.0.0.1" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">端口</label>
+                <div class="layui-input-block">
+                    <input type="number" name="port" autocomplete="off" value="3306" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dbname" autocomplete="off" value="viewlog" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="user" autocomplete="off" value="root" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="password" autocomplete="off" value="123456" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">字符集</label>
+                <div class="layui-input-block">
+                    <select name="charset" lay-verify="required">
+                        <option value="utf8">utf8</option>
+                        <option value="utf8mb4" selected>utf8mb4</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn" lay-submit="" lay-filter="install" type="button" style="width: 100%;">提交</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+{{end}}

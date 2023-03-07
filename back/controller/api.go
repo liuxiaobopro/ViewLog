@@ -21,6 +21,32 @@ type apiHandle struct{}
 
 var ApiHandle = new(apiHandle)
 
+// Install 安装
+func (*apiHandle) Install(c *gin.Context) {
+	req := new(modelReq.InstallReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		logrus.Errorf("install req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	data, err := service.ApiService.Install(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(data))
+}
+
+// Reset 重置
+func (*apiHandle) Reset(c *gin.Context) {
+	if err := service.ApiService.Reset(); err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(nil))
+}
+
 // OpenFold 打开文件夹
 func (*apiHandle) OpenFold(c *gin.Context) {
 	//#region 获取参数
@@ -203,10 +229,15 @@ func (*apiHandle) ReadFile(c *gin.Context) {
 func (*apiHandle) AddSsh(c *gin.Context) {
 	req := new(modelReq.AddSshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, resp.Param)
+		logrus.Errorf("AddSsh req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
 		return
 	}
 
-	data := service.ApiService.AddSsh(req)
-	c.JSON(http.StatusOK, data)
+	data, err := service.ApiService.AddSsh(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(data))
 }

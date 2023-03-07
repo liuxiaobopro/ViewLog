@@ -2,13 +2,22 @@ package router
 
 import (
 	"ViewLog/back/controller"
+	"ViewLog/back/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Router(r *gin.Engine) {
+	rg0 := r.Group("")
+	{
+		rg0.GET("/install", controller.ViewHandle.Install) // 安装页面
+		rg0.POST("/install", controller.ApiHandle.Install) // 安装
+		rg0.POST("/reset", controller.ApiHandle.Reset)     // 重置
+	}
+
 	//#region 页面
 	rg1 := r.Group("")
+	rg1.Use(middleware.Install())
 	{
 		rg1.GET("/", controller.ViewHandle.ViewIndex)               // 首页
 		rg1.GET("/log", controller.ViewHandle.ViewLog)              // 查看日志

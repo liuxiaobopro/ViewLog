@@ -8,16 +8,18 @@ import (
 	"ViewLog/back/router"
 
 	"github.com/gin-gonic/gin"
+	"github.com/thinkerou/favicon"
 )
 
 func Gin() {
 	r := gin.Default()
 
-	r.Use(middleware.Trace())
-	r.Use(middleware.Recovery())
-
 	r.Static("static", "front/static")
+	r.Use(favicon.New("front/static/favicon.ico"))
 	r.LoadHTMLGlob("front/view/*")
+
+	r.Use(middleware.Recovery())
+	r.Use(middleware.Trace())
 
 	router.Router(r)
 

@@ -2,7 +2,13 @@
 
 {{define "css"}}
 <style>
-    .func .item {
+    .main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 100px;
+    }
+    .main .item {
         margin: 10px;
     }
 </style>
@@ -10,7 +16,7 @@
 
 {{define "body"}}
 <body>
-    <div class="d-flex flex-column align-items-center func">
+    <div class="main">
         <div>
             <h1>{{.title}}</h1>
         </div>
@@ -26,9 +32,13 @@
         <div class="item">
             <button type="button" class="layui-btn layui-btn-primary layui-btn-lg">多主机(尽请期待)</button>
         </div>
+        <div class="item">
+            <button type="button" class="layui-btn layui-btn-sm" id="reset">重置配置</button>
+        </div>
     </div>
 </body>
 {{end}}
 
 {{define "js"}}
+<script src="static/js/welcome.js"></script>
 {{end}}

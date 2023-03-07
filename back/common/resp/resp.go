@@ -14,10 +14,10 @@ const (
 )
 
 var codeMap = map[int]string{
-	FailCode:  "fail",
-	SuccCode:  "success",
-	InterCode: "internal error",
-	ParamCode: "param error",
+	FailCode:  "操作失败",
+	SuccCode:  "操作成功",
+	InterCode: "内部错误",
+	ParamCode: "参数错误",
 }
 
 func GetMsg(code int) string {
@@ -34,7 +34,7 @@ var (
 func SuccResp(data any) *Resp {
 	return &Resp{
 		Code: SuccCode,
-		Msg:  "success",
+		Msg:  GetMsg(SuccCode),
 		Data: data,
 	}
 }
@@ -43,8 +43,8 @@ func FailResp(args ...any) *Resp {
 	code := FailCode
 	msg := GetMsg(code)
 	if len(args) > 0 {
-		code = args[0].(int)
-		msg = args[1].(string)
+		code = args[0].(int)   // 传入的code
+		msg = args[1].(string) // 传入的msg
 	}
 	return &Resp{
 		Code: code,
