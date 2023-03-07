@@ -16,7 +16,6 @@ import (
 var (
 	dbYamlPath = "back/configs/db.yaml"
 	lockPath   = "install.lock"
-	sess       = global.Db
 )
 
 type apiService struct {
@@ -84,6 +83,8 @@ func (th *apiService) Reset() error {
 
 // AddSsh 添加ssh
 func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
+	sess := global.Db
+
 	//#region 校验
 	if total, err := sess.Where("name = ?", req.Name).Count(&model.Ssh{}); err != nil {
 		return err
@@ -108,6 +109,8 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 
 // DelSsh 删除ssh
 func (*apiService) DelSsh(req *modelReq.DelSshReq) error {
+	sess := global.Db
+
 	if _, err := sess.ID(req.Id).Delete(&model.Ssh{}); err != nil {
 		return err
 	}
@@ -116,6 +119,8 @@ func (*apiService) DelSsh(req *modelReq.DelSshReq) error {
 
 // UpdateSsh 更新ssh
 func (*apiService) UpdateSsh(req *modelReq.UpdateSshReq) error {
+	sess := global.Db
+
 	//#region 校验
 	var sshInfo *model.Ssh
 	if has, err := sess.ID(req.Id).Get(sshInfo); err != nil {
@@ -168,6 +173,8 @@ func (*apiService) UpdateSsh(req *modelReq.UpdateSshReq) error {
 
 // DetailSSh 详情ssh
 func (*apiService) DetailSsh(req *modelReq.DetailSshReq) (*model.Ssh, error) {
+	sess := global.Db
+
 	var sshInfo *model.Ssh
 	if has, err := sess.ID(req.Id).Get(sshInfo); err != nil {
 		return nil, err
@@ -178,10 +185,14 @@ func (*apiService) DetailSsh(req *modelReq.DetailSshReq) (*model.Ssh, error) {
 }
 
 // ListSsh 列表ssh
-func (*apiService) ListSsh(req *modelReq.ListSshReq) (any, error) {
+func (*apiService) ListSsh(req *modelReq.ListSshReq) ([]*model.Ssh, error) {
+	sess := global.Db
+
 	var sshList = make([]*model.Ssh, 0)
-	if err := sess.Limit((req.Page-1)*req.Limit, req.Limit).Find(sshList); err != nil {
+	total, err := sess.Limit(req.Limit, (req.Page-1)*req.Limit).OrderBy("create_time Desc").FindAndCount(&sshList)
+	if err != nil {
 		return nil, err
 	}
+	fmt.Println("total: ", total, "sshList: ", sshList)
 	return sshList, nil
 }

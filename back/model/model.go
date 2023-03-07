@@ -8,12 +8,12 @@ type Demo struct {
 }
 
 type Ssh struct {
-	Id       int    `xorm:"not null pk autoincr INT"`
-	Name     string `xorm:"comment('主机名称') unique VARCHAR(50)"`
-	Host     string `xorm:"comment('主机地址') VARCHAR(50)"`
-	Port     int    `xorm:"default 0 comment('端口号') INT"`
-	Username string `xorm:"default '' comment('用户名') VARCHAR(50)"`
-	Password string `xorm:"default '' comment('密码') VARCHAR(50)"`
+	Id       int    `xorm:"not null pk autoincr INT" json:"id"`
+	Name     string `xorm:"comment('主机名称') unique VARCHAR(50)" json:"name"`
+	Host     string `xorm:"comment('主机地址') VARCHAR(50)" json:"host"`
+	Port     int    `xorm:"default 0 comment('端口号') INT" json:"port"`
+	Username string `xorm:"default '' comment('用户名') VARCHAR(50)" json:"username"`
+	Password string `xorm:"default '' comment('密码') VARCHAR(50)" json:"password"`
 
 	types.ModelCUExtends `xorm:"extends"`
 }
