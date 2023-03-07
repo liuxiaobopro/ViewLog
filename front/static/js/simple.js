@@ -1,6 +1,9 @@
-layui.use(['tree', 'code'], function () {
+layui.use(['tree', 'code', 'dropdown'], function () {
     layui.code()
-    var tree = layui.tree, layer = layui.layer, $ = layui.jquery, form = layui.form
+    var tree = layui.tree,
+        layer = layui.layer,
+        $ = layui.jquery,
+        form = layui.form
 
     //#region 监听运行模式
     form.on('radio(mode)', function (data) {
@@ -36,7 +39,7 @@ layui.use(['tree', 'code'], function () {
             shadeClose: true,
             shade: 0.8,
             offset: '20%',
-            area: ['50%','50%'],
+            area: ['30%', '45%'],
             content: 'folder_add'
         });
     })

@@ -21,9 +21,23 @@
             border-style: solid;
             border-color: #e2e2e2;
         }
-        .main legend{
+
+        .main legend {
             font-weight: bold;
             color: #56a66c;
+        }
+
+        .ssh-item .layui-form-radio {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ssh-item .icon {
+            cursor: pointer;
+        }
+
+        .ssh-item .icons {
+            margin-left: 3px;
         }
     </style>
 </head>
@@ -33,7 +47,7 @@
         <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" onclick="location.href='/'">首页</button>
     </div>
     <div class="main" style="display: flex;">
-        <div class="search" style="width: 35%;margin-right: 5px;">
+        <div class="search" style="width: 900px;margin-right: 5px;">
             <fieldset class="layui-elem-field">
                 <legend>功能</legend>
                 <div class="layui-field-box">
@@ -69,21 +83,28 @@
                 <legend>主机</legend>
                 <div class="layui-field-box">
                     <div style="display: flex;">
-                        <div>
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_ssh" style="width: 80%;">
+                        <div style="width: 400px;">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_ssh"
+                                style="width: 80%;">
                                 <i class="layui-icon layui-icon-add-circle"></i>
                                 添加SSH
                             </button>
                             <form class="layui-form" action="">
                                 <div class="layui-form-item ssh-item">
-                                    <input type="radio" name="sex" value="男" title="测试服1[192.168.0.1:22]" checked="">
-                                    <input type="radio" name="sex" value="女" title="测试服1[192.168.0.1:22]">
-                                    <input type="radio" name="sex" value="禁" title="测试服1[192.168.0.1:22]">
+                                    <div style="display: inline;">
+                                        <input type="radio" name="sex" value="男" title="测试服1[192.168.0.1:22]"
+                                            checked="">
+                                        <span class="icons">
+                                            <i class="layui-icon layui-icon-edit icon"></i>
+                                            <i class="layui-icon layui-icon-delete icon"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </form>
                         </div>
-                        <div>
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_folder" style="width: 80%;">
+                        <div style="flex: 1">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_folder"
+                                style="width: 80%;">
                                 <i class="layui-icon layui-icon-add-circle"></i>
                                 添加文件夹
                             </button>
