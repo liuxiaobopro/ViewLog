@@ -17,7 +17,7 @@ type LogIndexReadFileReq struct {
 
 type AddSshReq struct {
 	Name     string `form:"name" json:"name" binding:"required"`
-	IsActive int    `form:"isActive" json:"isActive" binding:"required"`
+	IsActive int    `form:"isActive" json:"isActive"`
 	Host     string `form:"host" json:"host" binding:"required"`
 	Port     int    `form:"port" json:"port" binding:"required"`
 	Username string `form:"user" json:"username"`

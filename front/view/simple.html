@@ -88,7 +88,6 @@
                             <form class="layui-form" action="">
                                 <div class="layui-form-item ssh-item1">
                                     {{range $v := .sshList}}
-
                                     <div style="display: inline;" class="ssh_item">
                                         <input type="checkbox" lay-filter="ssh" name="ssh_item" lay-skin="primary"
                                             value="{{$v.Id}}" title="{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】"
