@@ -51,3 +51,13 @@ type UpdateActiveSshReq struct {
 	Id       int `form:"id" json:"id" binding:"required"`
 	IsActive int `form:"isActive" json:"isActive" binding:"required"`
 }
+
+type AddFolderReq struct {
+	SshId int    `form:"sshId" json:"sshId" binding:"required"`
+	Name  string `form:"name" json:"name" binding:"required"`
+	Path  string `form:"path" json:"path" binding:"required"`
+}
+
+type DelFolderReq struct {
+	Id int `form:"id" json:"id" binding:"required"`
+}

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="static/css/main.css">
 
     <script src="static/layui/layui.js"></script>
+    <script src="static/js/add_folder.js"></script>
 </head>
 
 <body>
@@ -20,35 +21,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label">当前主机</label>
             <div class="layui-input-block">
-                <select name="interest" lay-filter="aihao">
+                <select name="sshId" lay-filter="aihao">
                     <option value=""></option>
-                    <option value="0">写作</option>
-                    <option value="1" selected="">测试主机1</option>
-                    <option value="2">游戏</option>
-                    <option value="3">音乐</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
-                    <option value="4">旅行</option>
+                    {{range $v:=.sshList}}
+                    <option value="{{$v.Id}}">{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】</option>
+                    {{end}}
                 </select>
             </div>
         </div>
@@ -59,14 +36,14 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><span style="color: red;">*</span>目录</label>
+            <label class="layui-form-label"><span style="color: red;">*</span>路径</label>
             <div class="layui-input-block">
-                <input type="text" name="name" autocomplete="off" placeholder="请输入全路径(pwd出来的)" class="layui-input">
+                <input type="text" name="path" autocomplete="off" placeholder="请输入全路径(pwd出来的)" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <button type="button" class="layui-btn" style="width: 100%;">添加</button>
+            <button lay-submit="" lay-filter="submit" type="button" class="layui-btn" style="width: 100%;">添加</button>
         </div>
     </form>
 </body>

@@ -293,3 +293,52 @@ func (*apiService) UpdateActiveSsh(req *modelReq.UpdateActiveSshReq) error {
 
 	return nil
 }
+
+// AddFolder 添加文件夹
+func (*apiService) AddFolder(req *modelReq.AddFolderReq) error {
+	sess := global.Db
+
+	//#region 校验
+	//#region ssh是否存在
+	if total, err := sess.ID(req.SshId).Count(&model.Ssh{}); err != nil {
+		logrus.Errorf("查询ssh是否存在失败: %v", err)
+		return err
+	} else if total <= 0 {
+		return errors.New("ssh不存在")
+	}
+	//#endregion
+
+	//#region 文件夹名称是否存在
+	if total, err := sess.Where("name = ?", req.Name).Count(&model.Folder{}); err != nil {
+		logrus.Errorf("查询文件夹名称是否存在失败: %v", err)
+		return err
+	} else if total > 0 {
+		return errors.New("文件夹名称已存在")
+	}
+	//#endregion
+	//#endregion
+
+	//#region 构建添加信息
+	folder := &model.Folder{
+		SshId: req.SshId,
+		Name:  req.Name,
+		Path:  req.Path,
+	}
+	if _, err := sess.Insert(folder); err != nil {
+		logrus.Errorf("添加文件夹失败: %v", err)
+		return err
+	}
+	//#endregion
+
+	return nil
+}
+
+// DelFolder 删除文件夹
+func (*apiService) DelFolder(req *modelReq.DelFolderReq) error {
+	sess := global.Db
+	if _, err := sess.ID(req.Id).Delete(&model.Folder{}); err != nil {
+		logrus.Errorf("删除文件夹失败: %v", err)
+		return err
+	}
+	return nil
+}

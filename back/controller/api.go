@@ -322,3 +322,37 @@ func (*apiHandle) UpdateActiveSsh(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, resp.Succ)
 }
+
+// AddFolder 添加文件夹
+func (*apiHandle) AddFolder(c *gin.Context) {
+	req := new(modelReq.AddFolderReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		logrus.Errorf("AddFolder req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	err := service.ApiService.AddFolder(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.Succ)
+}
+
+// DelFolder 删除文件夹
+func (*apiHandle) DelFolder(c *gin.Context) {
+	req := new(modelReq.DelFolderReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		logrus.Errorf("DelFolder req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	err := service.ApiService.DelFolder(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.Succ)
+}

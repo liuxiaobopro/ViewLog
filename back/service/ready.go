@@ -45,6 +45,7 @@ func Db() {
 	if err := engine.Sync(
 		new(model.Demo),
 		new(model.Ssh),
+		new(model.Folder),
 	); err != nil {
 		panic(err)
 	}

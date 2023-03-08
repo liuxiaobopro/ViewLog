@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-03-08 12:28:07
+ * @LastEditors: liuxiaobo xbfcok@gmail.com
+ * @LastEditTime: 2023-03-08 21:41:00
+ * @FilePath: \ViewLog\back\controller\view.go
+ */
 package controller
 
 import (
@@ -52,12 +58,11 @@ func (*viewHandle) ViewSimple(c *gin.Context) {
 
 // ViewSshAdd 添加ssh
 func (*viewHandle) ViewSshAdd(c *gin.Context) {
-	resData := make(gin.H, 0)
-	c.HTML(http.StatusOK, "add_ssh.html", resData)
+	c.HTML(http.StatusOK, "add_ssh.html", nil)
 }
 
 // ViewFolderAdd 添加文件夹
 func (*viewHandle) ViewFolderAdd(c *gin.Context) {
-	resData := make(gin.H, 0)
+	resData := service.ViewService.ViewFolderAdd()
 	c.HTML(http.StatusOK, "add_folder.html", resData)
 }
