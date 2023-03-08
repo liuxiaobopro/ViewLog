@@ -11,6 +11,7 @@ import (
 	"ViewLog/back/global"
 	"ViewLog/back/model"
 	modelReq "ViewLog/back/model/req"
+	toolsCrypto "ViewLog/back/tools/crypto"
 
 	"github.com/sirupsen/logrus"
 	"xorm.io/xorm"
@@ -104,13 +105,30 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 	}
 	//#endregion
 
+	//#region 加密密码
+	password, err := toolsCrypto.AesEncrypt(req.Password)
+	if err != nil {
+		logrus.Errorf("加密密码失败: %v", err)
+		return err
+	}
+	//#endregion
+
+	// //#region debug aes解密
+	// p, err := toolsCrypto.AesDecrypt(password)
+	// if err != nil {
+	// 	logrus.Errorf("解密密码失败: %v", err)
+	// 	return err
+	// }
+	// logrus.Infof("解密密码: %s \n", p)
+	// //#endregion
+
 	//#region 添加
 	if _, err := sess.Insert(&model.Ssh{
 		Name:     req.Name,
 		Host:     req.Host,
 		Port:     req.Port,
 		Username: req.Username,
-		Password: fmt.Sprintf("%x", md5.Sum([]byte(req.Password))),
+		Password: password,
 	}); err != nil {
 		logrus.Errorf("添加ssh失败: %v", err)
 		return err
@@ -173,7 +191,12 @@ func (*apiService) UpdateSsh(req *modelReq.UpdateSshReq) error {
 		updateCols = append(updateCols, "username")
 	}
 	if req.Password != "" && req.Password != fmt.Sprintf("%x", md5.Sum([]byte(sshInfo.Password))) {
-		updateSsh.Password = fmt.Sprintf("%x", md5.Sum([]byte(req.Password)))
+		password, err := toolsCrypto.AesEncrypt(req.Password)
+		if err != nil {
+			logrus.Errorf("加密密码失败: %v", err)
+			return err
+		}
+		updateSsh.Password = password
 		updateCols = append(updateCols, "password")
 	}
 	//#endregion

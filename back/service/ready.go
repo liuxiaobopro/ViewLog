@@ -60,6 +60,7 @@ func Config() {
 	)
 	defer func(conf *configs.Conf) {
 		global.Conf = conf
+		logrus.Infof("config: %+v", global.Conf)
 	}(&conf)
 	// #region 读取通用配置
 	var configPath string = path + "config.yaml"
@@ -90,6 +91,4 @@ func Config() {
 		panic(err)
 	}
 	// #endregion
-
-	logrus.Infof("config: %+v", global.Conf)
 }

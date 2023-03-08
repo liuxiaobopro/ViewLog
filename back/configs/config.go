@@ -5,4 +5,9 @@ type Conf struct {
 	Port int    `yaml:"post"` // 服务端口
 
 	Mysql string `yaml:"mysql"` // mysql连接字符串
+
+	Aes struct {
+		Key string `yaml:"key"` // aes加密key
+		IV  string `yaml:"iv"`  // aes加密iv
+	} `yaml:"aes"` // aes加密配置
 }
