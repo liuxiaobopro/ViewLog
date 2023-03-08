@@ -279,11 +279,7 @@ func (*apiHandle) UpdateSsh(c *gin.Context) {
 // DetailSSh 获取ssh详情
 func (*apiHandle) DetailSsh(c *gin.Context) {
 	req := new(modelReq.DetailSshReq)
-	if err := c.ShouldBind(req); err != nil {
-		logrus.Errorf("DetailSSh req error: %v", err)
-		c.JSON(http.StatusOK, resp.Param)
-		return
-	}
+	req.Id, _ = strconv.Atoi(c.Param("id"))
 
 	data, err := service.ApiService.DetailSsh(req)
 	if err != nil {
