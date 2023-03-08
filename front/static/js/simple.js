@@ -46,7 +46,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
             console.log("res:", res);
             if (res.code == 0) {
                 location.reload();
-            }else{
+            } else {
                 layer.msg(res.msg, { icon: 2, time: 2000 });
             }
         }
@@ -102,6 +102,54 @@ layui.use(['tree', 'code', 'dropdown'], function () {
     })
     $(".ssh-item1 .icons").mouseleave(function () {
         $(this).hide();
+    })
+    //#endregion
+
+    //#region 删除ssh
+    $(".ssh-item1 .del_ssh").click(function () {
+        var sshId = $(this).attr("data-id");
+        var sshName = $(this).attr("data-name");
+        layer.confirm('正在删除【' + sshName + '】,确定删除该SSH？', {
+            icon: 3,
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                async: true,
+                url: '/api/ssh',
+                type: 'DELETE',
+                data: JSON.stringify(
+                    {
+                        "id": parseInt(sshId)
+                    }
+                ),
+                dataType: 'json',
+                timeout: 30000,
+                success: successCallback,
+                error: errorCallback,
+                complete: completeCallback
+            })
+
+            function successCallback(res) {
+                console.log("res:", res);
+                if (res.code == 0) {
+                    layer.msg(res.msg, { icon: 1, time: 1000 }, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(res.msg, { icon: 2, time: 2000 });
+                }
+            }
+
+            function errorCallback(err, status) {
+                console.error("err:", err)
+            }
+
+            function completeCallback(xhr, status) {
+                console.log('Ajax请求已结束。');
+            }
+        }, function () {
+            // layer.msg('已取消', { icon: 1, time: 1000 });
+        });
     })
     //#endregion
 });
