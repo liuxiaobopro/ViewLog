@@ -10,6 +10,7 @@ type Demo struct {
 type Ssh struct {
 	Id       int    `xorm:"not null pk autoincr INT" json:"id"`
 	Name     string `xorm:"comment('主机名称') unique VARCHAR(50)" json:"name"`
+	IsActive int    `xorm:"default 1 comment('活跃状态(1未连接 2已连接)') TINYINT" json:"isActive"`
 	Host     string `xorm:"comment('主机地址') VARCHAR(50)" json:"host"`
 	Port     int    `xorm:"default 0 comment('端口号') INT" json:"port"`
 	Username string `xorm:"default '' comment('用户名') VARCHAR(50)" json:"username"`

@@ -17,6 +17,7 @@ type LogIndexReadFileReq struct {
 
 type AddSshReq struct {
 	Name     string `form:"name" json:"name" binding:"required"`
+	IsActive int    `form:"isActive" json:"isActive" binding:"required"`
 	Host     string `form:"host" json:"host" binding:"required"`
 	Port     int    `form:"port" json:"port" binding:"required"`
 	Username string `form:"user" json:"username"`
@@ -28,8 +29,13 @@ type DelSshReq struct {
 }
 
 type UpdateSshReq struct {
-	Id int `form:"id" json:"id" binding:"required"`
-	AddSshReq
+	Id       int    `form:"id" json:"id" binding:"required"`
+	Name     string `form:"name" json:"name"`
+	IsActive int    `form:"isActive" json:"isActive"`
+	Host     string `form:"host" json:"host"`
+	Port     int    `form:"port" json:"port"`
+	Username string `form:"user" json:"username"`
+	Password string `form:"password" json:"password"`
 }
 
 type DetailSshReq struct {

@@ -25,6 +25,10 @@ func Gin() {
 
 	// writeFile()
 
+	fmt.Println("=========================================")
+	fmt.Printf("浏览器打开: http://%s:%d \n", "127.0.0.1", global.Conf.Port)
+	fmt.Println("=========================================")
+
 	if err := r.Run(fmt.Sprintf("%s:%d", global.Conf.Host, global.Conf.Port)); err != nil {
 		panic(err)
 	}

@@ -27,17 +27,13 @@
             color: #56a66c;
         }
 
-        .ssh-item .layui-form-radio {
-            margin: 0;
-            padding: 0;
-        }
-
-        .ssh-item .icon {
+        .ssh-item1 .icon {
             cursor: pointer;
         }
 
-        .ssh-item .icons {
-            margin-left: 3px;
+        .shhs {
+            height: 550px;
+            overflow: auto;
         }
     </style>
 </head>
@@ -81,24 +77,29 @@
 
             <fieldset class="layui-elem-field">
                 <legend>主机</legend>
-                <div class="layui-field-box">
+                <div class="layui-field-box shhs">
                     <div style="display: flex;">
-                        <div style="width: 400px;">
+                        <div style="width: 400px;overflow: hidden;">
                             <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add_ssh"
                                 style="width: 80%;">
                                 <i class="layui-icon layui-icon-add-circle"></i>
                                 添加SSH
                             </button>
                             <form class="layui-form" action="">
-                                <div class="layui-form-item ssh-item">
-                                    <div style="display: inline;">
-                                        <input type="radio" name="sex" value="男" title="测试服1[192.168.0.1:22]"
-                                            checked="">
-                                        <span class="icons">
-                                            <i class="layui-icon layui-icon-edit icon"></i>
-                                            <i class="layui-icon layui-icon-delete icon"></i>
-                                        </span>
+                                <div class="layui-form-item ssh-item1">
+                                    {{range $v := .sshList}}
+
+                                    <div style="display: inline;" class="ssh_item">
+                                        <input type="checkbox" lay-filter="ssh" name="ssh_item" lay-skin="primary"
+                                            value="{{$v.Id}}" title="{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】"
+                                            {{if eq $v.IsActive 2}}checked{{end}}>
                                     </div>
+                                    <span class="icons" style="display: none;">
+                                        <i class="layui-icon layui-icon-edit icon"></i>
+                                        <i class="layui-icon layui-icon-delete icon"></i>
+                                    </span>
+                                    <br>
+                                    {{end}}
                                 </div>
                             </form>
                         </div>
@@ -109,7 +110,7 @@
                                 添加文件夹
                             </button>
                             <form class="layui-form" action="">
-                                <div class="layui-form-item ssh-item">
+                                <div class="layui-form-item ssh-item2">
                                     <input type="checkbox" name="like[write]" lay-skin="primary"
                                         title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
                                     <input type="checkbox" name="like[read]" lay-skin="primary"

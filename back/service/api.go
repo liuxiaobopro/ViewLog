@@ -22,8 +22,7 @@ var (
 	lockPath   = "install.lock"
 )
 
-type apiService struct {
-}
+type apiService struct{}
 
 var ApiService = new(apiService)
 
@@ -198,6 +197,10 @@ func (*apiService) UpdateSsh(req *modelReq.UpdateSshReq) error {
 		}
 		updateSsh.Password = password
 		updateCols = append(updateCols, "password")
+	}
+	if req.IsActive != 0 && req.IsActive != sshInfo.IsActive {
+		updateSsh.IsActive = req.IsActive
+		updateCols = append(updateCols, "is_active")
 	}
 	//#endregion
 

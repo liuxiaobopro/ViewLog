@@ -1,9 +1,11 @@
 package controller
 
 import (
-	"ViewLog/back/common/tools"
 	"net/http"
 	"time"
+
+	"ViewLog/back/common/tools"
+	"ViewLog/back/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -44,7 +46,7 @@ func (*viewHandle) ViewLog(c *gin.Context) {
 
 // ViewSimple 单主机
 func (*viewHandle) ViewSimple(c *gin.Context) {
-	resData := make(gin.H, 0)
+	resData := service.ViewService.ViewSimple()
 	c.HTML(http.StatusOK, "simple.html", resData)
 }
 
