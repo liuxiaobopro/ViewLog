@@ -11,6 +11,7 @@ import (
 	"ViewLog/back/global"
 	"ViewLog/back/model"
 	modelReq "ViewLog/back/model/req"
+	"ViewLog/back/tools/constant"
 	toolsCrypto "ViewLog/back/tools/crypto"
 
 	"github.com/sirupsen/logrus"
@@ -243,4 +244,52 @@ func (*apiService) ListSsh(req *modelReq.ListSshReq) (*resp.ListResult, error) {
 		List:  sshList,
 	}
 	return listResult, nil
+}
+
+// UpdateActiveSsh 更新ssh激活状态
+func (*apiService) UpdateActiveSsh(req *modelReq.UpdateActiveSshReq) error {
+	sess := global.Db.NewSession()
+
+	//#region 事务开始
+	defer sess.Close()
+	if err := sess.Begin(); err != nil {
+		return err
+	}
+	//#endregion
+
+	//#region 校验
+	sshInfo := &model.Ssh{}
+	if has, err := sess.ID(req.Id).Get(sshInfo); err != nil {
+		logrus.Errorf("查询ssh失败: %v", err)
+		return err
+	} else if !has {
+		return errors.New("ssh不存在")
+	}
+
+	if req.IsActive == sshInfo.IsActive {
+		return errors.New("ssh激活状态未改变")
+	}
+	//#endregion
+
+	//#region 更新
+	if req.IsActive == constant.SshIsActiveYES {
+		if _, err := sess.Where("is_active = ?", constant.SshIsActiveYES).Cols("is_active").Update(&model.Ssh{IsActive: constant.SshIsActiveNO}); err != nil {
+			logrus.Errorf("重置所有ssh激活状态失败: %v", err)
+			return err
+		}
+	}
+	if _, err := sess.ID(req.Id).Cols("is_active").Update(&model.Ssh{IsActive: req.IsActive}); err != nil {
+		logrus.Errorf("更新ssh激活状态失败: %v", err)
+		return err
+	}
+	//#endregion
+
+	//#region 提交事务
+	if err := sess.Commit(); err != nil {
+		_ = sess.Rollback()
+		return err
+	}
+	//#endregion
+
+	return nil
 }

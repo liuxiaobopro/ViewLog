@@ -27,7 +27,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
         $.ajax({
             async: true,
-            url: '/api/ssh',
+            url: '/api/ssh/active',
             type: 'PUT',
             data: JSON.stringify(
                 {
@@ -53,6 +53,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
         function errorCallback(err, status) {
             console.error("err:", err)
+            layer.msg(err.responseJSON.msg, { icon: 2, time: 2000 });
         }
 
         function completeCallback(xhr, status) {

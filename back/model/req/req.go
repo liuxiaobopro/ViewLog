@@ -46,3 +46,8 @@ type ListSshReq struct {
 	Page  int `form:"page" json:"page" binding:"required"`
 	Limit int `form:"limit" json:"limit" binding:"required"`
 }
+
+type UpdateActiveSshReq struct {
+	Id       int `form:"id" json:"id" binding:"required"`
+	IsActive int `form:"isActive" json:"isActive" binding:"required"`
+}

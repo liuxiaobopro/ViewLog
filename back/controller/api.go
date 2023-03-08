@@ -305,3 +305,20 @@ func (*apiHandle) ListSsh(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, resp.SuccResp(data))
 }
+
+// UpdateActiveSsh 更新ssh状态
+func (*apiHandle) UpdateActiveSsh(c *gin.Context) {
+	req := new(modelReq.UpdateActiveSshReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		logrus.Errorf("UpdateActiveSsh req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	err := service.ApiService.UpdateActiveSsh(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.Succ)
+}
