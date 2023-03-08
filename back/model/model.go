@@ -13,7 +13,7 @@ type Ssh struct {
 	Host     string `xorm:"comment('主机地址') VARCHAR(50)" json:"host"`
 	Port     int    `xorm:"default 0 comment('端口号') INT" json:"port"`
 	Username string `xorm:"default '' comment('用户名') VARCHAR(50)" json:"username"`
-	Password string `xorm:"default '' comment('密码') VARCHAR(50)" json:"password"`
+	Password string `xorm:"default '' comment('密码') VARCHAR(50)" json:"-"`
 
 	types.ModelCUExtends `xorm:"extends"`
 }
