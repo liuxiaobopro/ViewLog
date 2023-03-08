@@ -8,11 +8,16 @@ import (
 )
 
 func Router(r *gin.Engine) {
+	rg := r.Group("")
+	rg.Use(middleware.InstallAlready())
+	{
+		rg.GET("/install", controller.ViewHandle.Install) // 安装页面
+		rg.POST("/install", controller.ApiHandle.Install) // 安装
+	}
+
 	rg0 := r.Group("")
 	{
-		rg0.GET("/install", controller.ViewHandle.Install) // 安装页面
-		rg0.POST("/install", controller.ApiHandle.Install) // 安装
-		rg0.POST("/reset", controller.ApiHandle.Reset)     // 重置
+		rg0.POST("/reset", controller.ApiHandle.Reset) // 重置
 	}
 
 	//#region 页面
@@ -29,6 +34,7 @@ func Router(r *gin.Engine) {
 
 	//#region api
 	rg2 := r.Group("/api")
+	rg2.Use(middleware.Install())
 	{
 		rg2.GET("/show_fold", controller.ApiHandle.ShowFolds)
 		rg2.GET("/open_fold", controller.ApiHandle.OpenFold)
