@@ -185,3 +185,4 @@ $RECYCLE.BIN/
 testlog/
 *.log
 install.lock
+back/configs/db.yaml
