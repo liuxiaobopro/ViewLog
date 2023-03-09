@@ -41,18 +41,19 @@ func Router(r *gin.Engine) {
 		rg2.GET("/read_file", controller.ApiHandle.ReadFile)
 
 		//#region ssh
-		rg2.POST("/ssh", controller.ApiHandle.AddSsh)
-		rg2.DELETE("/ssh", controller.ApiHandle.DelSsh)
-		rg2.PUT("/ssh", controller.ApiHandle.UpdateSsh)
-		rg2.GET("/ssh/:id", controller.ApiHandle.DetailSsh)
-		rg2.GET("/ssh", controller.ApiHandle.ListSsh)
-		rg2.PUT("/ssh/active", controller.ApiHandle.UpdateActiveSsh)
-		rg2.GET("/ssh/:id/folder", controller.ApiHandle.ListSshFolder)
+		rg2.POST("/ssh", controller.ApiHandle.AddSsh)                  // 添加ssh
+		rg2.DELETE("/ssh", controller.ApiHandle.DelSsh)                // 删除ssh
+		rg2.PUT("/ssh", controller.ApiHandle.UpdateSsh)                // 更新ssh
+		rg2.GET("/ssh/:id", controller.ApiHandle.DetailSsh)            // ssh详情
+		rg2.GET("/ssh", controller.ApiHandle.ListSsh)                  // ssh列表
+		rg2.PUT("/ssh/active", controller.ApiHandle.UpdateActiveSsh)   // 更新ssh状态
+		rg2.GET("/ssh/:id/folder", controller.ApiHandle.ListSshFolder) // ssh文件夹列表
 		//#endregion
 
 		//#region folder
-		rg2.POST("/folder", controller.ApiHandle.AddFolder)
-		rg2.DELETE("/folder", controller.ApiHandle.DelFolder)
+		rg2.POST("/folder", controller.ApiHandle.AddFolder)                // 添加文件夹
+		rg2.DELETE("/folder", controller.ApiHandle.DelFolder)              // 删除文件夹
+		rg2.GET("/folder/:id/child", controller.ApiHandle.ListFolderChild) // 文件夹子文件夹列表
 		//#endregion
 	}
 	//#endregion

@@ -67,3 +67,7 @@ type AddFolderReq struct {
 type DelFolderReq struct {
 	Id int `form:"id" json:"id" binding:"required"`
 }
+
+type ListFolderChildReq struct {
+	FolderId int `form:"folderId" json:"folderId" binding:"required"`
+}

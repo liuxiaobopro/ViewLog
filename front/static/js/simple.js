@@ -324,22 +324,24 @@ layui.use(['tree', 'code', 'dropdown'], function () {
         complete: completeCallback
     })
 
+    var defaultTitle = '...'
+
     function successCallback(res) {
         if (res.code == 0) {
             resData = res.data;
             let treeData = [];
             resData.list.forEach(item => {
+                var nilNode = {
+                    title: defaultTitle,
+                    id: item.Id,
+                }
+
                 let treeItem = {
                     title: item.Path + '(' + item.Name + ')',
                     id: item.Id,
                     // field: item.name,
                     // spread: true,
-                    children: [
-                        {
-                            title: '...',
-                            id: item.Id,
-                        }
-                    ]
+                    children: [nilNode]
                 }
                 treeData.push(treeItem)
             });
@@ -350,8 +352,36 @@ layui.use(['tree', 'code', 'dropdown'], function () {
                 // , id: 'demoId1'
                 // , isJump: true //是否允许点击节点时弹出新窗口跳转
                 , click: function (obj) {
-                    var data = obj.data;  //获取当前点击的节点数据
-                    layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+                    var nodeData = obj.data;  //获取当前点击的节点数据
+                    // layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+                    if (obj.state == "open") {
+                        console.log("nodeData:", nodeData);
+                        if (nodeData.children.length == 1 && nodeData.children[0].title == defaultTitle) {
+                            $.ajax({
+                                async: true,
+                                url: '/api/folder/' + nodeData.id + '/child',
+                                type: 'GET',
+                                data: {},
+                                dataType: 'json',
+                                timeout: 30000,
+                                success: successCallback,
+                                error: errorCallback,
+                                complete: completeCallback
+                            })
+
+                            function successCallback(res) {
+                                console.log("res:", res);
+                            }
+
+                            function errorCallback(err, status) {
+                                console.error("err:", err)
+                            }
+
+                            function completeCallback(xhr, status) {
+                                console.log('Ajax请求已结束。');
+                            }
+                        }
+                    }
                 }
             });
         } else {

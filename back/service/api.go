@@ -468,3 +468,38 @@ func (*apiService) DelFolder(req *modelReq.DelFolderReq) error {
 	}
 	return nil
 }
+
+// ListFolderChild 列表文件夹子文件夹
+func (*apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, error) {
+	var (
+		sess = global.Db
+	)
+
+	//#region 查询文件夹详
+	folderInfo := &model.Folder{}
+	if has, err := sess.ID(req.FolderId).Get(folderInfo); err != nil {
+		logrus.Errorf("查询文件夹失败: %v", err)
+		return nil, err
+	} else if !has {
+		return nil, errors.New("文件夹不存在")
+	}
+	//#endregion
+
+	//#region 查询子文件夹
+	sessSsh, err := global.SshClient.NewSession()
+	if err != nil {
+		logrus.Errorf("创建ssh会话失败: %v", err)
+		return nil, errors.New("创建ssh会话失败")
+	}
+	defer sessSsh.Close()
+	cmd := "ls -R " + folderInfo.Path
+	output, err := sessSsh.Output(cmd)
+	if err != nil {
+		logrus.Errorf("查询子文件夹失败: %v", err)
+		return nil, errors.New("查询子文件夹失败")
+	}
+	fmt.Println(string(output))
+	//#endregion
+
+	return string(output), nil
+}

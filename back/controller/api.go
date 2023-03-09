@@ -374,3 +374,16 @@ func (*apiHandle) DelFolder(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, resp.Succ)
 }
+
+// ListFolderChild 获取文件夹子节点
+func (*apiHandle) ListFolderChild(c *gin.Context) {
+	req := new(modelReq.ListFolderChildReq)
+	req.FolderId, _ = strconv.Atoi(c.Param("id"))
+
+	data, err := service.ApiService.ListFolderChild(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(data))
+}
