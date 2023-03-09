@@ -15,6 +15,7 @@ import (
 	modelReq "ViewLog/back/model/req"
 	"ViewLog/back/tools/constant"
 	toolsCrypto "ViewLog/back/tools/crypto"
+	toolsPool "ViewLog/back/tools/pool"
 	toolsSsh "ViewLog/back/tools/ssh"
 
 	"github.com/sirupsen/logrus"
@@ -489,14 +490,7 @@ func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, er
 	//#endregion
 
 	//#region 查询子文件夹
-	sessSsh, err := global.SshClient.NewSession()
-	if err != nil {
-		logrus.Errorf("创建ssh会话失败: %v", err)
-		return nil, errors.New("创建ssh会话失败")
-	}
-	defer sessSsh.Close()
-
-	wd, err := GetWalkDir(sessSsh, folderInfo.Path)
+	wd, err := GetWalkDir(folderInfo.Path)
 	if err != nil {
 		logrus.Errorf("查询子文件夹失败: %v", err)
 		return nil, errors.New("查询子文件夹失败")
@@ -514,8 +508,9 @@ type WalkDir struct {
 // walkDir 返回指定路径下所有文件和文件夹的层次结构
 func walkDir(sshSession *ssh.Session, path string, wd *WalkDir) error {
 	// 使用 SSH Session 打开远程目录
-	remoteDir, err := sshSession.Output("ls -p " + path)
+	remoteDir, err := sshSession.CombinedOutput("ls -p " + path)
 	if err != nil {
+		logrus.Errorf("打开远程目录失败: %v", err)
 		return err
 	}
 
@@ -524,8 +519,8 @@ func walkDir(sshSession *ssh.Session, path string, wd *WalkDir) error {
 
 	// 遍历 ls 命令输出中的每个文件/文件夹
 	for _, file := range remoteFiles {
-		// 去除目录名末尾的斜杠
-		file = strings.TrimRight(file, "/")
+		// // 去除目录名末尾的斜杠
+		// file = strings.TrimRight(file, "/")
 
 		// 跳过以点号开头的目录（隐藏目录）
 		if strings.HasPrefix(file, ".") {
@@ -561,7 +556,16 @@ func walkDir(sshSession *ssh.Session, path string, wd *WalkDir) error {
 }
 
 // GetWalkDir 返回指定路径下所有文件和文件夹的层次结构
-func GetWalkDir(sshSession *ssh.Session, path string) (*WalkDir, error) {
+func GetWalkDir(path string) (*WalkDir, error) {
+	toolsPool.SshInit()
+	sessionPool := toolsPool.SessionPool
+	sshSession, err := sessionPool.GetSession()
+	if err != nil {
+		logrus.Errorf("获取ssh会话失败: %v", err)
+		return nil, errors.New("获取ssh会话失败")
+	}
+	defer sessionPool.PutSession(sshSession)
+
 	root := &WalkDir{
 		Title:    path,
 		Children: make([]*WalkDir, 0),
