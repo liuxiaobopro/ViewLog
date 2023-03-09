@@ -21,10 +21,10 @@
         <div class="layui-form-item">
             <label class="layui-form-label">当前主机</label>
             <div class="layui-input-block">
-                <select name="sshId" lay-filter="aihao">
+                <select name="sshId" lay-filter="aihao" disabled>
                     <option value=""></option>
                     {{range $v:=.sshList}}
-                    <option value="{{$v.Id}}">{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】</option>
+                    <option value="{{$v.Id}}" {{if eq $v.IsActive  2}}selected{{end}}>{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】</option>
                     {{end}}
                 </select>
             </div>

@@ -126,7 +126,10 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 		logrus.Errorf("ssh连接失败: %v", err)
 		return errors.New("ssh连接失败")
 	}
-	fmt.Println("sshClient: ", sshClient)
+	if global.SshClient != nil {
+		global.SshClient.Close()
+	}
+	global.SshClient = sshClient
 	//#endregion
 	//#endregion
 
@@ -336,6 +339,7 @@ func (*apiService) UpdateActiveSsh(req *modelReq.UpdateActiveSshReq) error {
 	//#endregion
 
 	//#region 更新
+	//#region db
 	if req.IsActive == constant.SshIsActiveYES {
 		if _, err := sess.Where("is_active = ?", constant.SshIsActiveYES).Cols("is_active").Update(&model.Ssh{IsActive: constant.SshIsActiveNO}); err != nil {
 			logrus.Errorf("重置所有ssh激活状态失败: %v", err)
@@ -346,6 +350,13 @@ func (*apiService) UpdateActiveSsh(req *modelReq.UpdateActiveSshReq) error {
 		logrus.Errorf("更新ssh激活状态失败: %v", err)
 		return err
 	}
+	//#endregion
+
+	//#region client
+	if err := toolsSsh.UpdateGlobalClient(); err != nil {
+		return err
+	}
+	//#endregion
 	//#endregion
 
 	//#region 提交事务
@@ -400,6 +411,26 @@ func (*apiService) AddFolder(req *modelReq.AddFolderReq) error {
 	} else if total > 0 {
 		return errors.New("文件夹名称已存在")
 	}
+	//#endregion
+
+	//#region 文件夹路径是否存在
+	sshClient := global.SshClient
+	if sshClient == nil {
+		return errors.New("ssh未激活")
+	}
+	sshSess, err := sshClient.NewSession()
+	if err != nil {
+		logrus.Errorf("创建ssh会话失败: %v", err)
+		return err
+	}
+	defer sshSess.Close()
+	cmd := "ls " + req.Path
+	output, err := sshSess.Output(cmd)
+	if err != nil {
+		logrus.Errorf("文件夹路径不存在: %v", err)
+		return errors.New("文件夹路径不存在")
+	}
+	fmt.Println(string(output))
 	//#endregion
 	//#endregion
 

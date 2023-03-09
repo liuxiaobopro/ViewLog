@@ -8,6 +8,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
     //#region 获取隐藏域
     var activeSshId = $("#activeSshId").val(); // 当前激活的sshId
+    console.log("activeSshId:", activeSshId);
     //#endregion
 
     //#region 监听运行模式
@@ -84,6 +85,10 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
     //#region 添加文件夹
     $("#add_folder").click(function () {
+        if (activeSshId == 0) {
+            layer.msg("请先选择某个SSH", { icon: 2, time: 2000 });
+            return false;
+        }
         layer.open({
             type: 2,
             title: '添加文件夹',
@@ -323,7 +328,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
             let treeData = [];
             resData.list.forEach(item => {
                 let treeItem = {
-                    title: item.Name,
+                    title: item.Path+'('+item.Name+')',
                     id: item.Id,
                     // field: item.name,
                     // spread: true,

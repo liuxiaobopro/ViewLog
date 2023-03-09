@@ -4,6 +4,7 @@ import (
 	"ViewLog/back/global"
 	"ViewLog/back/model"
 	"ViewLog/back/tools/constant"
+	toolsSsh "ViewLog/back/tools/ssh"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -36,6 +37,12 @@ func (*viewService) ViewSimple() any {
 		return err
 	}
 	resData["activeSshId"] = activeSshInfo.Id
+	//#endregion
+
+	//#region 更新global.sshClient
+	if err := toolsSsh.UpdateGlobalClient(); err != nil {
+		return err
+	}
 	//#endregion
 
 	return resData

@@ -2,18 +2,21 @@ layui.use(['layer', 'form'], function () {
     var form = layui.form, $ = layui.jquery;
 
     form.on('submit(submit)', function (data) {
+        let loading = layer.load(3, { shade: [0.3, '#fff'] });
         let formData = data.field;
-        console.log("formData:", formData);
         if (formData.sshId == "") {
             layer.msg("请选择SSH", { icon: 2, time: 2000 });
+            layer.close(loading);
             return false;
         }
         if (formData.name == "") {
             layer.msg("名称不能为空", { icon: 2, time: 2000 });
+            layer.close(loading);
             return false;
         }
         if (formData.path == "") {
             layer.msg("路径不能为空", { icon: 2, time: 2000 });
+            layer.close(loading);
             return false;
         }
 
@@ -53,6 +56,7 @@ layui.use(['layer', 'form'], function () {
         }
 
         function completeCallback(xhr, status) {
+            layer.close(loading);
             console.log('Ajax请求已结束。');
         }
         return false;
