@@ -1,9 +1,7 @@
 layui.use(['form'], function () {
-    var form = layui.form, $ = layui.jquery;
-
+    var form = layui.form, $ = layui.jquery, layer = layui.layer;
     form.on('submit(submit)', function (data) {
         formData = data.field;
-
         if (formData.name == "") {
             layer.msg("主机名称不能为空", { icon: 2, time: 2000 });
             return false;

@@ -12,7 +12,6 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
     //#region 监听运行模式
     form.on('radio(mode)', function (data) {
-        console.log("data:", data);
         var mode = data.value;
         if (mode == "1") {
             $(".do_search").hide();
@@ -319,7 +318,6 @@ layui.use(['tree', 'code', 'dropdown'], function () {
     })
 
     function successCallback(res) {
-        console.log("res:", res);
         if (res.code == 0) {
             resData = res.data;
             let treeData = [];
@@ -331,7 +329,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
                     // spread: true,
                     children: [
                         {
-                            title: '空',
+                            title: '...',
                             id: item.Id,
                         }
                     ]
@@ -359,7 +357,6 @@ layui.use(['tree', 'code', 'dropdown'], function () {
     }
 
     function completeCallback(xhr, status) {
-        console.log('Ajax请求已结束。');
     }
 
 

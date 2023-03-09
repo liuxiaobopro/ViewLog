@@ -13,6 +13,7 @@ import (
 	modelReq "ViewLog/back/model/req"
 	"ViewLog/back/tools/constant"
 	toolsCrypto "ViewLog/back/tools/crypto"
+	toolsSsh "ViewLog/back/tools/ssh"
 
 	"github.com/sirupsen/logrus"
 	"xorm.io/xorm"
@@ -94,15 +95,39 @@ func (th *apiService) Reset() error {
 
 // AddSsh 添加ssh
 func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
-	sess := global.Db
+	sess := global.Db.NewSession()
+
+	//#region 事务开始
+	defer sess.Close()
+	if err := sess.Begin(); err != nil {
+		return err
+	}
+	//#endregion
 
 	//#region 校验
+	//#region 名称
 	if total, err := sess.Where("name = ?", req.Name).Count(&model.Ssh{}); err != nil {
 		logrus.Errorf("查询ssh名称是否存在失败: %v", err)
 		return err
 	} else if total > 0 {
 		return errors.New("ssh名称已存在")
 	}
+	//#endregion
+
+	//#region ssh真实性
+	sshConf := toolsSsh.Config{
+		Host:     req.Host,
+		Port:     req.Port,
+		User:     req.Username,
+		Password: req.Password,
+	}
+	sshClient, err := sshConf.Connect()
+	if err != nil {
+		logrus.Errorf("ssh连接失败: %v", err)
+		return errors.New("ssh连接失败")
+	}
+	fmt.Println("sshClient: ", sshClient)
+	//#endregion
 	//#endregion
 
 	//#region 加密密码
@@ -122,15 +147,30 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 	// logrus.Infof("解密密码: %s \n", p)
 	// //#endregion
 
+	//#region 重置活跃ssh状态
+	if _, err := sess.Where("is_active = ?", constant.SshIsActiveYES).Cols("is_active").Update(&model.Ssh{IsActive: constant.SshIsActiveNO}); err != nil {
+		logrus.Errorf("重置活跃ssh状态失败: %v", err)
+		return err
+	}
+	//#endregion
+
 	//#region 添加
 	if _, err := sess.Insert(&model.Ssh{
 		Name:     req.Name,
 		Host:     req.Host,
 		Port:     req.Port,
+		IsActive: constant.SshIsActiveYES,
 		Username: req.Username,
 		Password: password,
 	}); err != nil {
 		logrus.Errorf("添加ssh失败: %v", err)
+		return err
+	}
+	//#endregion
+
+	//#region 提交事务
+	if err := sess.Commit(); err != nil {
+		_ = sess.Rollback()
 		return err
 	}
 	//#endregion
