@@ -370,7 +370,12 @@ layui.use(['tree', 'code', 'dropdown'], function () {
                             })
 
                             function successCallback(res) {
-                                console.log("res:", res);
+                                // console.log("res:", res);
+                                console.log("res.data:", res.data);
+                                tree.render({
+                                    elem: '#folder_tree'
+                                    , data: [res.data]
+                                })
                             }
 
                             function errorCallback(err, status) {

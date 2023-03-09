@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"ViewLog/back/common/resp"
@@ -16,6 +18,7 @@ import (
 	toolsSsh "ViewLog/back/tools/ssh"
 
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh"
 	"xorm.io/xorm"
 )
 
@@ -470,7 +473,7 @@ func (*apiService) DelFolder(req *modelReq.DelFolderReq) error {
 }
 
 // ListFolderChild 列表文件夹子文件夹
-func (*apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, error) {
+func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, error) {
 	var (
 		sess = global.Db
 	)
@@ -492,14 +495,98 @@ func (*apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, error
 		return nil, errors.New("创建ssh会话失败")
 	}
 	defer sessSsh.Close()
-	cmd := "ls -R " + folderInfo.Path
-	output, err := sessSsh.Output(cmd)
+
+	wd, err := GetWalkDir(sessSsh, folderInfo.Path)
 	if err != nil {
 		logrus.Errorf("查询子文件夹失败: %v", err)
 		return nil, errors.New("查询子文件夹失败")
 	}
-	fmt.Println(string(output))
 	//#endregion
 
-	return string(output), nil
+	return wd, nil
+}
+
+type WalkDir struct {
+	Title    string     `json:"title"`    // 文件夹名称
+	Children []*WalkDir `json:"children"` // 子文件夹
+}
+
+// walkDir 返回指定路径下所有文件和文件夹的层次结构
+func walkDir(sshSession *ssh.Session, path string, wd *WalkDir) error {
+	// 使用 SSH Session 打开远程目录
+	remoteDir, err := sshSession.Output("ls -p " + path)
+	if err != nil {
+		return err
+	}
+
+	// 分割 ls 命令输出的每一行
+	remoteFiles := strings.Split(string(remoteDir), "\n")
+
+	// 遍历 ls 命令输出中的每个文件/文件夹
+	for _, file := range remoteFiles {
+		// 去除目录名末尾的斜杠
+		file = strings.TrimRight(file, "/")
+
+		// 跳过以点号开头的目录（隐藏目录）
+		if strings.HasPrefix(file, ".") {
+			continue
+		}
+
+		// 检查文件是否是一个目录
+		isDir := false
+		if strings.HasSuffix(file, "/") {
+			isDir = true
+			file = strings.TrimRight(file, "/")
+		}
+
+		// 如果是一个目录，则递归调用 walkDir 函数
+		if isDir {
+			newDir := &WalkDir{
+				Title:    file,
+				Children: make([]*WalkDir, 0),
+			}
+			wd.Children = append(wd.Children, newDir)
+			if err := walkDir(sshSession, filepath.Join(path, file), newDir); err != nil {
+				return err
+			}
+		} else {
+			// 如果是一个文件，则将其添加到当前目录的文件列表中
+			wd.Children = append(wd.Children, &WalkDir{
+				Title: file,
+			})
+		}
+	}
+
+	return nil
+}
+
+// GetWalkDir 返回指定路径下所有文件和文件夹的层次结构
+func GetWalkDir(sshSession *ssh.Session, path string) (*WalkDir, error) {
+	root := &WalkDir{
+		Title:    path,
+		Children: make([]*WalkDir, 0),
+	}
+
+	if err := walkDir(sshSession, path, root); err != nil {
+		return nil, err
+	}
+
+	// 过滤空目录
+	filterEmptyDir(root)
+
+	return root, nil
+}
+
+// filterEmptyDir 过滤空目录
+func filterEmptyDir(wd *WalkDir) {
+	for i := 0; i < len(wd.Children); {
+		if len(wd.Children[i].Children) == 0 {
+			// 如果是空目录，则将其从当前目录的子目录列表中移除
+			wd.Children = append(wd.Children[:i], wd.Children[i+1:]...)
+		} else {
+			// 如果不是空目录，则递归调用 filterEmptyDir 函数
+			filterEmptyDir(wd.Children[i])
+			i++
+		}
+	}
 }
