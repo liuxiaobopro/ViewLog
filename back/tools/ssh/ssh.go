@@ -2,6 +2,7 @@ package ssh
 
 import (
 	"fmt"
+	"time"
 
 	"ViewLog/back/global"
 	"ViewLog/back/model"
@@ -27,6 +28,7 @@ func (th *Config) Connect() (*ssh.Client, error) {
 			ssh.Password(th.Password),
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // 不验证目标主机的公钥
+		Timeout:         time.Duration(global.Conf.SshTimeout) * time.Second,
 	}
 	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", th.Host, th.Port), config)
 	if err != nil {
@@ -52,7 +54,6 @@ func UpdateGlobalClient() error {
 		if global.SshClient != nil {
 			if err := global.SshClient.Close(); err != nil {
 				logrus.Errorf("关闭旧的sshClient失败: %v", err)
-				return err
 			}
 		}
 		//#endregion
@@ -72,9 +73,9 @@ func UpdateGlobalClient() error {
 		sshClient, err := sshConfig.Connect()
 		if err != nil {
 			logrus.Errorf("连接ssh失败: %v", err)
-			return err
+		} else {
+			global.SshClient = sshClient
 		}
-		global.SshClient = sshClient
 		//#endregion
 	}
 	return nil

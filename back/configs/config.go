@@ -10,4 +10,6 @@ type Conf struct {
 		Key string `yaml:"key"` // aes加密key
 		IV  string `yaml:"iv"`  // aes加密iv
 	} `yaml:"aes"` // aes加密配置
+
+	SshTimeout int `yaml:"sshTimeout"` // ssh超时时间
 }

@@ -53,7 +53,9 @@ layui.use(['tree', 'code', 'dropdown'], function () {
             if (res.code == 0) {
                 location.reload();
             } else {
-                layer.msg(res.msg, { icon: 2, time: 2000 });
+                layer.msg(res.msg, { icon: 2, time: 2000 }, function () {
+                    location.reload();
+                });
             }
         }
 
@@ -328,7 +330,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
             let treeData = [];
             resData.list.forEach(item => {
                 let treeItem = {
-                    title: item.Path+'('+item.Name+')',
+                    title: item.Path + '(' + item.Name + ')',
                     id: item.Id,
                     // field: item.name,
                     // spread: true,

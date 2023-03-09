@@ -127,7 +127,7 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 		return errors.New("ssh连接失败")
 	}
 	if global.SshClient != nil {
-		global.SshClient.Close()
+		_ = global.SshClient.Close()
 	}
 	global.SshClient = sshClient
 	//#endregion
@@ -339,24 +339,34 @@ func (*apiService) UpdateActiveSsh(req *modelReq.UpdateActiveSshReq) error {
 	//#endregion
 
 	//#region 更新
-	//#region db
-	if req.IsActive == constant.SshIsActiveYES {
-		if _, err := sess.Where("is_active = ?", constant.SshIsActiveYES).Cols("is_active").Update(&model.Ssh{IsActive: constant.SshIsActiveNO}); err != nil {
-			logrus.Errorf("重置所有ssh激活状态失败: %v", err)
+	password, err := toolsCrypto.AesDecrypt(sshInfo.Password)
+	if err != nil {
+		logrus.Errorf("解密密码失败: %v", err)
+		return err
+	}
+	sshConf := &toolsSsh.Config{
+		Host:     sshInfo.Host,
+		Port:     sshInfo.Port,
+		User:     sshInfo.Username,
+		Password: password,
+	}
+	sshClient, err := sshConf.Connect()
+	if err != nil {
+		logrus.Errorf("连接ssh失败: %v", err)
+		return errors.New("连接ssh失败")
+	} else {
+		if req.IsActive == constant.SshIsActiveYES {
+			if _, err := sess.Where("is_active = ?", constant.SshIsActiveYES).Cols("is_active").Update(&model.Ssh{IsActive: constant.SshIsActiveNO}); err != nil {
+				logrus.Errorf("重置所有ssh激活状态失败: %v", err)
+				return err
+			}
+		}
+		if _, err := sess.ID(req.Id).Cols("is_active").Update(&model.Ssh{IsActive: req.IsActive}); err != nil {
+			logrus.Errorf("更新ssh激活状态失败: %v", err)
 			return err
 		}
+		global.SshClient = sshClient
 	}
-	if _, err := sess.ID(req.Id).Cols("is_active").Update(&model.Ssh{IsActive: req.IsActive}); err != nil {
-		logrus.Errorf("更新ssh激活状态失败: %v", err)
-		return err
-	}
-	//#endregion
-
-	//#region client
-	if err := toolsSsh.UpdateGlobalClient(); err != nil {
-		return err
-	}
-	//#endregion
 	//#endregion
 
 	//#region 提交事务
@@ -421,7 +431,7 @@ func (*apiService) AddFolder(req *modelReq.AddFolderReq) error {
 	sshSess, err := sshClient.NewSession()
 	if err != nil {
 		logrus.Errorf("创建ssh会话失败: %v", err)
-		return err
+		return errors.New("创建ssh会话失败")
 	}
 	defer sshSess.Close()
 	cmd := "ls " + req.Path
