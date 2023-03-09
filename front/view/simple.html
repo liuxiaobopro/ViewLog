@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>添加ssh</title>
+    <title>单主机</title>
     <link rel="stylesheet" href="static/layui/css/layui.css">
     <link rel="stylesheet" href="static/css/main.css">
 
@@ -34,6 +34,10 @@
         .shhs {
             height: 550px;
             overflow: auto;
+        }
+
+        .shhs button {
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -90,12 +94,13 @@
                                     {{range $v := .sshList}}
                                     <div style="display: inline;" class="ssh_item">
                                         <input type="checkbox" lay-filter="ssh" name="ssh_item" lay-skin="primary"
-                                            value="{{$v.Id}}" title="{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】"
-                                            {{if eq $v.IsActive 2}}checked{{end}}>
+                                            value="{{$v.Id}}" title="{{$v.Name}}【{{$v.Host}}:{{$v.Port}}】" {{if eq
+                                            $v.IsActive 2}}checked{{end}}>
                                     </div>
                                     <span class="icons" style="display: none;">
                                         <!-- <i class="layui-icon layui-icon-edit icon edit_ssh" data-id="{{$v.Id}}" data-name="{{$v.Name}}"></i> -->
-                                        <i class="layui-icon layui-icon-delete icon del_ssh" data-id="{{$v.Id}}"  data-name="{{$v.Name}}"></i>
+                                        <i class="layui-icon layui-icon-delete icon del_ssh" data-id="{{$v.Id}}"
+                                            data-name="{{$v.Name}}"></i>
                                     </span>
                                     <br>
                                     {{end}}
@@ -108,16 +113,12 @@
                                 <i class="layui-icon layui-icon-add-circle"></i>
                                 添加文件夹
                             </button>
-                            <form class="layui-form" action="">
-                                <div class="layui-form-item ssh-item2">
-                                    <input type="checkbox" name="like[write]" lay-skin="primary"
-                                        title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
-                                    <input type="checkbox" name="like[read]" lay-skin="primary"
-                                        title="D:\1_liuxiaobo\download_ali\navicat Premium 120" checked="">
-                                    <input type="checkbox" name="like[game]" lay-skin="primary"
-                                        title="D:\1_liuxiaobo\download_ali\navicat Premium 120">
-                                </div>
-                            </form>
+                            <!-- <div class="layui-btn-container">
+                                <button type="button" class="layui-btn layui-btn-sm" lay-demo="getChecked">获取选中节点数据</button>
+                                <button type="button" class="layui-btn layui-btn-sm" lay-demo="setChecked">勾选指定节点</button>
+                                <button type="button" class="layui-btn layui-btn-sm" lay-demo="reload">重载实例</button>
+                            </div> -->
+                            <div id="folder_tree" class="demo-tree demo-tree-box"></div>
                         </div>
                     </div>
                 </div>
