@@ -47,6 +47,7 @@ func Router(r *gin.Engine) {
 		rg2.GET("/ssh/:id", controller.ApiHandle.DetailSsh)
 		rg2.GET("/ssh", controller.ApiHandle.ListSsh)
 		rg2.PUT("/ssh/active", controller.ApiHandle.UpdateActiveSsh)
+		rg2.GET("/ssh/:id/folder", controller.ApiHandle.ListSshFolder)
 		//#endregion
 
 		//#region folder

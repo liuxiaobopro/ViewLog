@@ -52,6 +52,12 @@ type UpdateActiveSshReq struct {
 	IsActive int `form:"isActive" json:"isActive" binding:"required"`
 }
 
+type ListSshFolderReq struct {
+	Page  int `form:"page" json:"page" binding:"required"`
+	Limit int `form:"limit" json:"limit"`
+	SshId int `form:"sshId" json:"sshId"`
+}
+
 type AddFolderReq struct {
 	SshId int    `form:"sshId" json:"sshId" binding:"required"`
 	Name  string `form:"name" json:"name" binding:"required"`

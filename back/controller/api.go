@@ -323,6 +323,24 @@ func (*apiHandle) UpdateActiveSsh(c *gin.Context) {
 	c.JSON(http.StatusOK, resp.Succ)
 }
 
+// ListSshFolder 获取ssh文件夹列表
+func (*apiHandle) ListSshFolder(c *gin.Context) {
+	req := new(modelReq.ListSshFolderReq)
+	if err := c.ShouldBind(req); err != nil {
+		logrus.Errorf("ListSshFolder req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+	req.SshId, _ = strconv.Atoi(c.Param("id"))
+
+	data, err := service.ApiService.ListSshFolder(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(data))
+}
+
 // AddFolder 添加文件夹
 func (*apiHandle) AddFolder(c *gin.Context) {
 	req := new(modelReq.AddFolderReq)

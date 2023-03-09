@@ -139,12 +139,36 @@ func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
 
 // DelSsh 删除ssh
 func (*apiService) DelSsh(req *modelReq.DelSshReq) error {
-	sess := global.Db
+	sess := global.Db.NewSession()
 
+	//#region 事务开始
+	defer sess.Close()
+	if err := sess.Begin(); err != nil {
+		return err
+	}
+	//#endregion
+
+	//#region 删除ssh
 	if _, err := sess.ID(req.Id).Delete(&model.Ssh{}); err != nil {
 		logrus.Errorf("删除ssh失败: %v", err)
 		return err
 	}
+	//#endregion
+
+	//#region 删除ssh关联的folder
+	if _, err := sess.Where("ssh_id = ?", req.Id).Delete(&model.Folder{}); err != nil {
+		logrus.Errorf("删除ssh关联的folder失败: %v", err)
+		return err
+	}
+	//#endregion
+
+	//#region 提交事务
+	if err := sess.Commit(); err != nil {
+		_ = sess.Rollback()
+		return err
+	}
+	//#endregion
+
 	return nil
 }
 
@@ -292,6 +316,27 @@ func (*apiService) UpdateActiveSsh(req *modelReq.UpdateActiveSshReq) error {
 	//#endregion
 
 	return nil
+}
+
+// ListSshFolder 列表ssh文件夹
+func (*apiService) ListSshFolder(req *modelReq.ListSshFolderReq) (*resp.ListResult, error) {
+	sess := global.Db
+
+	var folderList = make([]*model.Folder, 0)
+	if req.Limit > 0 {
+		sess.Limit(req.Limit, (req.Page-1)*req.Limit)
+	}
+	total, err := sess.Where("ssh_id = ?", req.SshId).OrderBy("create_time Desc").FindAndCount(&folderList)
+	if err != nil {
+		logrus.Errorf("查询ssh文件夹列表失败: %v", err)
+		return nil, err
+	}
+
+	listResult := &resp.ListResult{
+		Total: total,
+		List:  folderList,
+	}
+	return listResult, nil
 }
 
 // AddFolder 添加文件夹

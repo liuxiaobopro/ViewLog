@@ -6,6 +6,10 @@ layui.use(['tree', 'code', 'dropdown'], function () {
         form = layui.form,
         util = layui.util
 
+    //#region 获取隐藏域
+    var activeSshId = $("#activeSshId").val(); // 当前激活的sshId
+    //#endregion
+
     //#region 监听运行模式
     form.on('radio(mode)', function (data) {
         console.log("data:", data);
@@ -302,35 +306,81 @@ layui.use(['tree', 'code', 'dropdown'], function () {
         }]
     }]
 
-    tree.render({
-        elem: '#folder_tree'
-        , data: data
-        , showCheckbox: true  //是否显示复选框
-        , id: 'demoId1'
-        , isJump: true //是否允许点击节点时弹出新窗口跳转
-        , click: function (obj) {
-            var data = obj.data;  //获取当前点击的节点数据
-            layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
-        }
-    });
+    $.ajax({
+        async: true,
+        url: '/api/ssh/' + activeSshId + '/folder',
+        type: 'GET',
+        data: { page: 1 },
+        dataType: 'json',
+        timeout: 30000,
+        success: successCallback,
+        error: errorCallback,
+        complete: completeCallback
+    })
 
-    util.event('lay-demo', {
-        getChecked: function (othis) {
-            var checkedData = tree.getChecked('demoId1'); //获取选中节点的数据
-
-            layer.alert(JSON.stringify(checkedData), { shade: 0 });
-            console.log(checkedData);
-        }
-        , setChecked: function () {
-            tree.setChecked('demoId1', [12, 16]); //勾选指定节点
-        }
-        , reload: function () {
-            //重载实例
-            tree.reload('demoId1', {
-
+    function successCallback(res) {
+        console.log("res:", res);
+        if (res.code == 0) {
+            resData = res.data;
+            let treeData = [];
+            resData.list.forEach(item => {
+                let treeItem = {
+                    title: item.Name,
+                    id: item.Id,
+                    // field: item.name,
+                    // spread: true,
+                    children: [
+                        {
+                            title: '空',
+                            id: item.Id,
+                        }
+                    ]
+                }
+                treeData.push(treeItem)
             });
-
+            tree.render({
+                elem: '#folder_tree'
+                , data: treeData
+                // , showCheckbox: true  //是否显示复选框
+                // , id: 'demoId1'
+                // , isJump: true //是否允许点击节点时弹出新窗口跳转
+                , click: function (obj) {
+                    var data = obj.data;  //获取当前点击的节点数据
+                    layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+                }
+            });
+        } else {
+            layer.msg(res.msg, { icon: 2, time: 2000 });
         }
-    });
+    }
+
+    function errorCallback(err, status) {
+        console.error("err:", err)
+    }
+
+    function completeCallback(xhr, status) {
+        console.log('Ajax请求已结束。');
+    }
+
+
+
+    // util.event('lay-demo', {
+    //     getChecked: function (othis) {
+    //         var checkedData = tree.getChecked('demoId1'); //获取选中节点的数据
+
+    //         layer.alert(JSON.stringify(checkedData), { shade: 0 });
+    //         console.log(checkedData);
+    //     }
+    //     , setChecked: function () {
+    //         tree.setChecked('demoId1', [12, 16]); //勾选指定节点
+    //     }
+    //     , reload: function () {
+    //         //重载实例
+    //         tree.reload('demoId1', {
+
+    //         });
+
+    //     }
+    // });
     //#endregion
 });
