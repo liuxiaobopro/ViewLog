@@ -490,6 +490,55 @@ func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, er
 	//#endregion
 
 	//#region 查询子文件夹
+	//#region 穿件ssh会话
+	sshSess, err := global.SshClient.NewSession()
+	if err != nil {
+		logrus.Errorf("创建ssh会话失败: %v", err)
+		return nil, errors.New("创建ssh会话失败")
+	}
+	defer sshSess.Close()
+	//#endregion
+
+	//#region 获取文件
+	defaultCmd := "find . -name \"*.log\" && find . -name \"*.txt\""
+	cmd := fmt.Sprintf("cd %s && %s", folderInfo.Path, defaultCmd)
+	output, err := sshSess.Output(cmd)
+	if err != nil {
+		logrus.Errorf("查询文件失败: %v", err)
+		return nil, errors.New("查询文件失败")
+	}
+	fileList := strings.Split(string(output), "\n")
+	//#endregion
+
+	//#region 过滤空目录
+	var filterFileList = make([]string, 0)
+	for _, file := range fileList {
+		if file != "" {
+			filterFileList = append(filterFileList, file)
+		}
+	}
+	//#endregion
+	//#endregion
+
+	return filterFileList, nil
+}
+
+func (th *apiService) ListFolderChild1(req *modelReq.ListFolderChildReq) (any, error) {
+	var (
+		sess = global.Db
+	)
+
+	//#region 查询文件夹详
+	folderInfo := &model.Folder{}
+	if has, err := sess.ID(req.FolderId).Get(folderInfo); err != nil {
+		logrus.Errorf("查询文件夹失败: %v", err)
+		return nil, err
+	} else if !has {
+		return nil, errors.New("文件夹不存在")
+	}
+	//#endregion
+
+	//#region 查询子文件夹
 	wd, err := GetWalkDir(folderInfo.Path)
 	if err != nil {
 		logrus.Errorf("查询子文件夹失败: %v", err)

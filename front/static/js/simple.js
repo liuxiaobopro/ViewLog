@@ -172,10 +172,45 @@ layui.use(['tree', 'code', 'dropdown'], function () {
         console.log("folderId:", folderId);
         var html = ""
         if (folderId > 0) {
-            for (let index = 0; index < 10; index++) {
-                html += `
-                <div class="file-item">${index}</div>
-                `
+            var loading = layer.load(3)
+            $.ajax({
+                async: true,
+                url: '/api/folder/' + folderId + '/child',
+                type: 'GET',
+                data: {},
+                dataType: 'json',
+                timeout: 30000,
+                success: successCallback,
+                error: errorCallback,
+                complete: completeCallback
+            })
+
+            function successCallback(res) {
+                console.log("res:", res);
+                if (res.code == 0) {
+                    var data = res.data;
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            html += `
+                            <div class="file-item">${item}</div>
+                            `
+                        });
+                    } else {
+                        html = "该文件夹下没有文件"
+                    }
+                    $(".file-list").html(html);
+                } else {
+                    layer.msg(res.msg, { icon: 2, time: 2000 });
+                }
+            }
+
+            function errorCallback(err, status) {
+                console.error("err:", err)
+            }
+
+            function completeCallback(xhr, status) {
+                console.log('Ajax请求已结束。');
+                layer.close(loading)
             }
         } else {
             html = "请选择文件夹"
