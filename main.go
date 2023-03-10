@@ -7,6 +7,6 @@ import (
 func main() {
 	ready.Config()
 	ready.Db()
-	// ready.Ssh()
+	ready.Ssh()
 	ready.Gin()
 }

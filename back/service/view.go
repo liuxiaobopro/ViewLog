@@ -45,6 +45,17 @@ func (*viewService) ViewSimple() any {
 	}
 	//#endregion
 
+	//#region 获取文件夹
+	if activeSshInfo.Id > 0 {
+		folderList := make([]*model.Folder, 0)
+		if err := sess.Where("ssh_id = ?", activeSshInfo.Id).OrderBy("create_time Desc").Find(&folderList); err != nil {
+			logrus.Errorf("查询文件夹列表失败: %v", err)
+			return err
+		}
+		resData["folderList"] = folderList
+	}
+	//#endregion
+
 	return resData
 }
 

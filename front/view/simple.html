@@ -37,7 +37,22 @@
         }
 
         .shhs button {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .files .filter {
+            display: block;
+            margin: 10px;
+        }
+
+        .file-list .file-item {
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .file-list .file-item:hover {
+            font-size: 20px;
+            color: #56a66c;
         }
     </style>
 </head>
@@ -116,12 +131,24 @@
                                 <i class="layui-icon layui-icon-add-circle"></i>
                                 添加文件夹
                             </button>
-                            <!-- <div class="layui-btn-container">
-                                <button type="button" class="layui-btn layui-btn-sm" lay-demo="getChecked">获取选中节点数据</button>
-                                <button type="button" class="layui-btn layui-btn-sm" lay-demo="setChecked">勾选指定节点</button>
-                                <button type="button" class="layui-btn layui-btn-sm" lay-demo="reload">重载实例</button>
-                            </div> -->
-                            <div id="folder_tree" class="demo-tree demo-tree-box"></div>
+                            <div class="files">
+                                <span class="filter">
+                                    *当前只搜索[.log]和[.txt]文件
+                                </span>
+                                <form class="layui-form" action="">
+                                    <div class="layui-form-item">
+                                        <select name="interest" class="folder-list" lay-filter="folder-list">
+                                            <option value="-1">请选择文件夹</option>
+                                            {{range $v := .folderList}}
+                                            <option value="{{$v.Id}}">{{$v.Name}}[{{$v.Path}}]</option>
+                                            {{end}}
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-item file-list">
+                                        请选择文件夹
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
