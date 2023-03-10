@@ -2,6 +2,7 @@ package ssh
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"ViewLog/back/global"
@@ -39,6 +40,13 @@ func (th *Config) Connect() (*ssh.Client, error) {
 }
 
 func UpdateGlobalClient() error {
+	if _, err := os.Stat("install.lock"); err != nil {
+		if os.IsNotExist(err) {
+			logrus.Errorf("install.lock不存在, 请先安装")
+			return err
+		}
+	}
+
 	sess := global.Db
 
 	//#region 查询活跃的ssh
