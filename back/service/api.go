@@ -645,3 +645,51 @@ func filterEmptyDir(wd *WalkDir) {
 		}
 	}
 }
+
+// DetailFile 查询文件
+func (th *apiService) DetailFile(req *modelReq.DetailFileReq) (any, error) {
+	var (
+		sess     = global.Db
+		filePath string // 文件路径
+	)
+
+	//#region 获取文件夹详情
+	folderInfo := &model.Folder{}
+	if has, err := sess.ID(req.FolderId).Get(folderInfo); err != nil {
+		logrus.Errorf("查询文件夹失败: %v", err)
+		return nil, err
+	} else if !has {
+		return nil, errors.New("文件夹不存在")
+	}
+	filePath = folderInfo.Path + req.Path[1:]
+	//#endregion
+
+	//#region 字符串过滤
+	filePath = strings.ReplaceAll(filePath, "(", "\\(")
+	filePath = strings.ReplaceAll(filePath, ")", "\\)")
+	//#endregion
+
+	//#region 查询文件
+	//#region 穿件ssh会话
+	sshSess, err := global.SshClient.NewSession()
+	if err != nil {
+		logrus.Errorf("创建ssh会话失败: %v", err)
+		return nil, errors.New("创建ssh会话失败")
+	}
+	defer sshSess.Close()
+	//#endregion
+
+	//#region 查询最后1000行
+	logrus.Infof("查询文件: %s", filePath)
+	cmd := fmt.Sprintf("tail -n 1000 %s", filePath)
+	output, err := sshSess.Output(cmd)
+	if err != nil {
+		logrus.Errorf("查询文件失败: %v", err)
+		logrus.Errorf("查询文件命令: %s", cmd)
+		return nil, errors.New("查询文件失败")
+	}
+	//#endregion
+	//#endregion
+
+	return string(output), nil
+}

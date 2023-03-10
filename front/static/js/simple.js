@@ -9,6 +9,8 @@ layui.use(['tree', 'code', 'dropdown'], function () {
     //#region 获取隐藏域
     var activeSshId = $("#activeSshId").val(); // 当前激活的sshId
     console.log("activeSshId:", activeSshId);
+
+    var activeFolderId = 0; // 当前激活的文件夹Id
     //#endregion
 
     //#region 监听运行模式
@@ -168,14 +170,14 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
     //#region 监听文件夹切换
     form.on('select(folder-list)', function (data) {
-        var folderId = data.value;
-        console.log("folderId:", folderId);
+        activeFolderId = data.value;
+        console.log("activeFolderId:", activeFolderId);
         var html = ""
-        if (folderId > 0) {
+        if (activeFolderId > 0) {
             var loading = layer.load(3)
             $.ajax({
                 async: true,
-                url: '/api/folder/' + folderId + '/child',
+                url: '/api/folder/' + activeFolderId + '/child',
                 type: 'GET',
                 data: {},
                 dataType: 'json',
@@ -219,5 +221,54 @@ layui.use(['tree', 'code', 'dropdown'], function () {
     });
     //#endregion
 
+    //#region 点击文件列表
+    $(".file-list").on("click", ".file-item", function () {
+        var loading = layer.load(3)
+
+        var fileName = $(this).text();
+        console.log("fileName:", fileName);
+        $("#file-name").html(fileName);
+
+        jsonData = {
+            "folderId": activeFolderId,
+            "path": fileName
+        }
+        $.ajax({
+            async: true,
+            url: '/api/file',
+            type: 'GET',
+            data: jsonData,
+            dataType: 'json',
+            timeout: 30000,
+            success: successCallback,
+            error: errorCallback,
+            complete: completeCallback
+        })
+
+
+
+        function successCallback(res) {
+            console.log("res:", res);
+            if (res.code == 0) {
+                $("#content").html(res.data);
+                setTimeout(() => {
+                    var h4 = $('.out-box').prop("scrollHeight"); //等同 $('.out-box')[0].scrollHeight
+                    $('.out-box').scrollTop(h4);
+                }, 10);
+            } else {
+                layer.msg(res.msg, { icon: 2, time: 2000 });
+            }
+        }
+
+        function errorCallback(err, status) {
+            console.error("err:", err)
+        }
+
+        function completeCallback(xhr, status) {
+            console.log('Ajax请求已结束。');
+            layer.close(loading)
+        }
+    })
+    //#endregion
 
 });

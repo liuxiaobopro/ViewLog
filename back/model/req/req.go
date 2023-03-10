@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-03-08 12:28:07
+ * @LastEditors: liuxiaobo xbfcok@gmail.com
+ * @LastEditTime: 2023-03-10 13:13:53
+ * @FilePath: \ViewLog\back\model\req\req.go
+ */
 package req
 
 type InstallReq struct {
@@ -70,4 +76,9 @@ type DelFolderReq struct {
 
 type ListFolderChildReq struct {
 	FolderId int `form:"folderId" json:"folderId" binding:"required"`
+}
+
+type DetailFileReq struct {
+	FolderId int    `form:"folderId" json:"folderId" binding:"required"`
+	Path     string `form:"path" json:"path" binding:"required"`
 }

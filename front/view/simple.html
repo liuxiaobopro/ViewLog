@@ -30,7 +30,9 @@
         .ssh-item1 .icon {
             cursor: pointer;
         }
+
         .shhs {
+            height: 650px;
             width: 864px;
             overflow: auto;
         }
@@ -52,6 +54,12 @@
         .file-list .file-item:hover {
             font-size: 20px;
             color: #56a66c;
+        }
+
+        #content {
+            height: 700px;
+            width: 930px;
+            overflow: auto;
         }
     </style>
 </head>
@@ -132,7 +140,9 @@
                             </button>
                             <div class="files">
                                 <span class="filter">
-                                    *当前只搜索[.log]和[.txt]文件
+                                    *当前只搜索[.log]和[.txt]文件内容
+                                    <div>(如果打不开, 说明有特殊字符)</div>
+                                    <div>(只展示最后1000行)</div>
                                 </span>
                                 <form class="layui-form" action="">
                                     <div class="layui-form-item">
@@ -155,9 +165,15 @@
         </div>
         <div class="view" style="flex: 1;">
             <fieldset class="layui-elem-field">
+                <legend>文件名</legend>
+                <div class="layui-field-box">
+                    <div id="file-name"></div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
                 <legend>文件内容</legend>
                 <div class="layui-field-box">
-                    文件内容11111111111111111111111111111111111
+                    <pre id="content" class="out-box"></pre>
                 </div>
             </fieldset>
         </div>

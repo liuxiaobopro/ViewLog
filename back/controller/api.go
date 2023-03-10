@@ -387,3 +387,20 @@ func (*apiHandle) ListFolderChild(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, resp.SuccResp(data))
 }
+
+// DetailFile 获取文件详情
+func (*apiHandle) DetailFile(c *gin.Context) {
+	req := new(modelReq.DetailFileReq)
+	if err := c.ShouldBind(req); err != nil {
+		logrus.Errorf("DetailFile req error: %v", err)
+		c.JSON(http.StatusOK, resp.Param)
+		return
+	}
+
+	data, err := service.ApiService.DetailFile(req)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.FailResp(resp.FailCode, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, resp.SuccResp(data))
+}

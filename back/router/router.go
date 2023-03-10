@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-03-08 12:28:07
+ * @LastEditors: liuxiaobo xbfcok@gmail.com
+ * @LastEditTime: 2023-03-10 13:12:15
+ * @FilePath: \ViewLog\back\router\router.go
+ */
 package router
 
 import (
@@ -54,6 +60,10 @@ func Router(r *gin.Engine) {
 		rg2.POST("/folder", controller.ApiHandle.AddFolder)                // 添加文件夹
 		rg2.DELETE("/folder", controller.ApiHandle.DelFolder)              // 删除文件夹
 		rg2.GET("/folder/:id/child", controller.ApiHandle.ListFolderChild) // 文件夹子文件夹列表
+		//#endregion
+
+		//#region file
+		rg2.GET("/file", controller.ApiHandle.DetailFile) // 文件详情
 		//#endregion
 	}
 	//#endregion
