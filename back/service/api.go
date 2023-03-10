@@ -33,7 +33,7 @@ type apiService struct{}
 var ApiService = new(apiService)
 
 // Install 安装
-func (th *apiService) Install(req *modelReq.InstallReq) (any, error) {
+func (th *apiService) Install(req *modelReq.InstallReq) (interface{}, error) {
 	mysqlDns := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
 		req.User,
 		req.Password,
@@ -476,7 +476,7 @@ func (*apiService) DelFolder(req *modelReq.DelFolderReq) error {
 }
 
 // ListFolderChild 列表文件夹子文件夹
-func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, error) {
+func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (interface{}, error) {
 	var (
 		sess = global.Db
 	)
@@ -525,7 +525,7 @@ func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (any, er
 	return filterFileList, nil
 }
 
-func (th *apiService) ListFolderChild1(req *modelReq.ListFolderChildReq) (any, error) {
+func (th *apiService) ListFolderChild1(req *modelReq.ListFolderChildReq) (interface{}, error) {
 	var (
 		sess = global.Db
 	)
@@ -647,7 +647,7 @@ func filterEmptyDir(wd *WalkDir) {
 }
 
 // DetailFile 查询文件
-func (th *apiService) DetailFile(req *modelReq.DetailFileReq) (any, error) {
+func (th *apiService) DetailFile(req *modelReq.DetailFileReq) (interface{}, error) {
 	var (
 		sess     = global.Db
 		filePath string // 文件路径

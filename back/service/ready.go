@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-03-08 12:28:07
+ * @LastEditors: liuxiaobo xbfcok@gmail.com
+ * @LastEditTime: 2023-03-10 21:08:13
+ * @FilePath: \ViewLog\back\service\ready.go
+ */
 package service
 
 import (
@@ -56,7 +62,7 @@ func Db() {
 func Config() {
 	var (
 		err  error
-		path = "back/configs/"
+		path = "./back/configs/"
 		conf configs.Conf
 	)
 	defer func(conf *configs.Conf) {

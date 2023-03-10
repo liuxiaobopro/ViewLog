@@ -1,14 +1,14 @@
 package resp
 
 type Resp struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	Data any    `json:"data"`
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 type ListResult struct {
-	Total int64 `json:"total"`
-	List  any   `json:"list"`
+	Total int64       `json:"total"`
+	List  interface{} `json:"list"`
 }
 
 const (
@@ -36,7 +36,7 @@ var (
 	Param = &Resp{Code: ParamCode, Msg: GetMsg(ParamCode), Data: nil}
 )
 
-func SuccResp(data any) *Resp {
+func SuccResp(data interface{}) *Resp {
 	return &Resp{
 		Code: SuccCode,
 		Msg:  GetMsg(SuccCode),
@@ -44,7 +44,7 @@ func SuccResp(data any) *Resp {
 	}
 }
 
-func FailResp(args ...any) *Resp {
+func FailResp(args ...interface{}) *Resp {
 	code := FailCode
 	msg := GetMsg(code)
 	if len(args) > 0 {

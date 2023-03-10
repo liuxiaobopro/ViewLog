@@ -15,7 +15,7 @@ type viewService struct{}
 var ViewService = new(viewService)
 
 // ViewSimple
-func (*viewService) ViewSimple() any {
+func (*viewService) ViewSimple() interface{} {
 	var (
 		sess    = global.Db
 		resData = make(gin.H, 0)
@@ -60,7 +60,7 @@ func (*viewService) ViewSimple() any {
 }
 
 // ViewFolderAdd 添加文件夹
-func (*viewService) ViewFolderAdd() any {
+func (*viewService) ViewFolderAdd() interface{} {
 	var (
 		sess    = global.Db
 		resData = make(gin.H, 0)
