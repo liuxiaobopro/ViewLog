@@ -53,13 +53,13 @@ func (th *apiService) Install(req *modelReq.InstallReq) (any, error) {
 		return nil, errors.New("数据库连接失败, 请检查配置是否正确")
 	}
 
-	global.Db = engine
-
 	//#region 写入文件
 	dbYaml := fmt.Sprintf("mysql: %s", mysqlDns)
 	if err := os.WriteFile(dbYamlPath, []byte(dbYaml), 0666); err != nil {
 		logrus.Errorf("写入文件失败: %v", err)
 		return nil, err
+	} else {
+		logrus.Info("写入db.yaml文件成功")
 	}
 	//#endregion
 
@@ -74,6 +74,8 @@ func (th *apiService) Install(req *modelReq.InstallReq) (any, error) {
 			if err := os.WriteFile(lockPath, []byte(content), 0666); err != nil {
 				logrus.Errorf("写入文件失败: %v", err)
 				return nil, err
+			} else {
+				logrus.Info("写入install.lock文件成功")
 			}
 		}
 	}
