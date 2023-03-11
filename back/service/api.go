@@ -60,6 +60,7 @@ func (th *apiService) Install(req *modelReq.InstallReq) (interface{}, error) {
 		return nil, err
 	} else {
 		logrus.Info("写入db.yaml文件成功")
+		global.Conf.Mysql = mysqlDns
 	}
 	//#endregion
 
