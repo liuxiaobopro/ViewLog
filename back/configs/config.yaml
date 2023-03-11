@@ -6,3 +6,5 @@ aes:
   iv: 1234567890123456
 
 sshTimeout: 3
+
+filterStr: ()

@@ -12,4 +12,6 @@ type Conf struct {
 	} `yaml:"aes"` // aes加密配置
 
 	SshTimeout int `yaml:"sshTimeout"` // ssh超时时间
+
+	FilterStr string `yaml:"filterStr"` // 过滤字符串
 }

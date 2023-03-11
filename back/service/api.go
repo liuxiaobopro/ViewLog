@@ -509,8 +509,9 @@ func (th *apiService) ListFolderChild(req *modelReq.ListFolderChildReq) (interfa
 	//#endregion
 
 	//#region 获取文件
-	defaultCmd := "find . -name \"*.log\" && find . -name \"*.txt\""
-	cmd := fmt.Sprintf("cd %s && %s", folderInfo.Path, defaultCmd)
+	defaultCmd := " && find . -type f -name \"*.log\" -not -path \"*/.*/*\""
+	defaultCmd += " && find . -type f -name \"*.txt\" -not -path \"*/.*/*\""
+	cmd := fmt.Sprintf("cd %s %s", folderInfo.Path, defaultCmd)
 	output, err := sshSess.Output(cmd)
 	if err != nil {
 		logrus.Errorf("查询文件失败: %v", err)
@@ -672,8 +673,12 @@ func (th *apiService) DetailFile(req *modelReq.DetailFileReq) (interface{}, erro
 	//#endregion
 
 	//#region 字符串过滤
-	filePath = strings.ReplaceAll(filePath, "(", "\\(")
-	filePath = strings.ReplaceAll(filePath, ")", "\\)")
+
+	for _, v := range global.Conf.FilterStr {
+		fStr := string(v)
+		filePath = strings.ReplaceAll(filePath, fStr, fmt.Sprintf("\\%s", fStr))
+	}
+	// filePath = strings.ReplaceAll(filePath, ")", "\\)")
 	//#endregion
 
 	//#region 查询文件
