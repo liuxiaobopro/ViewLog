@@ -233,6 +233,10 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
     //#region FUNC 获取文件详情
     function getFileDetail() {
+        if (activeFolderId==0 || selectFilename=="") {
+            layer.msg("要不要考虑先选个文件", { icon: 2, time: 2000 });
+            return false;
+        }
         var loading = layer.load(3)
         jsonData = {
             "folderId": activeFolderId,
