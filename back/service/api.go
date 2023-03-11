@@ -102,6 +102,12 @@ func (th *apiService) Reset() error {
 
 // AddSsh 添加ssh
 func (*apiService) AddSsh(req *modelReq.AddSshReq) error {
+	//#region 校验
+	if req.Host == "127.0.0.1" || req.Host == "localhost" {
+		return errors.New("不允许添加本机ssh(研发中)")
+	}
+	//#endregion
+
 	sess := global.Db.NewSession()
 
 	//#region 事务开始
