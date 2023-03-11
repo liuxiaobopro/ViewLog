@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"ViewLog/back/common/resp"
@@ -28,7 +29,9 @@ var (
 	lockPath   = "install.lock"
 )
 
-type apiService struct{}
+type apiService struct {
+	DetailFileLock sync.Mutex
+}
 
 var ApiService = new(apiService)
 
@@ -656,6 +659,8 @@ func filterEmptyDir(wd *WalkDir) {
 
 // DetailFile 查询文件
 func (th *apiService) DetailFile(req *modelReq.DetailFileReq) (interface{}, error) {
+	th.DetailFileLock.Lock()
+	defer th.DetailFileLock.Unlock()
 	var (
 		sess     = global.Db
 		filePath string // 文件路径
