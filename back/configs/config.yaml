@@ -7,4 +7,5 @@ aes:
 
 sshTimeout: 3
 
-filterStr: ()
+# 第二个字符是空格
+filterStr: ( )
