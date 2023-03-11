@@ -11,6 +11,7 @@ layui.use(['tree', 'code', 'dropdown'], function () {
     console.log("activeSshId:", activeSshId);
 
     var activeFolderId = 0; // 当前激活的文件夹Id
+    var selectFilename = ""; // 当前选中的文件名
     //#endregion
 
     //#region 监听运行模式
@@ -223,15 +224,19 @@ layui.use(['tree', 'code', 'dropdown'], function () {
 
     //#region 点击文件列表
     $(".file-list").on("click", ".file-item", function () {
-        var loading = layer.load(3)
-
         var fileName = $(this).text();
-        console.log("fileName:", fileName);
-        $("#file-name").html(fileName);
+        selectFilename = fileName;
+        $("#file-name").html(selectFilename);
+        getFileDetail()
+    })
+    //#endregion
 
+    //#region FUNC 获取文件详情
+    function getFileDetail() {
+        var loading = layer.load(3)
         jsonData = {
             "folderId": activeFolderId,
-            "path": fileName
+            "path": selectFilename
         }
         $.ajax({
             async: true,
@@ -244,8 +249,6 @@ layui.use(['tree', 'code', 'dropdown'], function () {
             error: errorCallback,
             complete: completeCallback
         })
-
-
 
         function successCallback(res) {
             console.log("res:", res);
@@ -268,7 +271,12 @@ layui.use(['tree', 'code', 'dropdown'], function () {
             console.log('Ajax请求已结束。');
             layer.close(loading)
         }
-    })
+    }
     //#endregion
 
+    //#region 重新获取
+    $("#getDetailAgain").click(function () {
+        getFileDetail()
+    })
+    //#endregion
 });
